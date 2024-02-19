@@ -6,6 +6,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { lightTheme } from '@constants/Colors';
 import { RootStackParamList, RootTabParamList } from '@utils/types';
 import LoginScreen from '@screens/Login';
+import {Text} from 'react-native'
 
 export default function Navigation({ firstTime }: { firstTime: boolean }) {
   const light = lightTheme;
