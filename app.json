@@ -1,14 +1,35 @@
 {
   "expo": {
-    "name": "afmtbpeople",
-    "slug": "afmtbpeople",
+    "name": "aft-people",
+    "slug": "aft-people",
     "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ryanfab.aftpeople"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
     "extra": {
       "eas": {
-        "projectId": "6d77fa04-36be-48b4-a864-820d0e27ef05"
+        "projectId": "16e9954e-9726-45af-8ab7-b0ea6ce2a686"
       }
     }
   }
