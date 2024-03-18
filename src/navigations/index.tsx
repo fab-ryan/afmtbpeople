@@ -6,7 +6,11 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { lightTheme } from '@constants/Colors';
 import { RootStackParamList, RootTabParamList } from '@utils/types';
 import LoginScreen from '@screens/Login';
-import {Text} from 'react-native'
+import HomeScreen from '@screens/Home';
+import IncomeScreen from '@screens/Income';
+
+import { HomeIcon, ListIcon } from '@components';
+import { Dimensions } from 'react-native';
 
 export default function Navigation({ firstTime }: { firstTime: boolean }) {
   const light = lightTheme;
@@ -44,24 +48,50 @@ function RootNavigator() {
         name='Root'
         component={BottomTabNavigator}
       />
+      <Stack.Screen
+        name='Income'
+        component={IncomeScreen}
+      />
     </Stack.Navigator>
   );
 }
 
 const bottomTab = createBottomTabNavigator<RootTabParamList>();
 function BottomTabNavigator() {
+  const DEVICE_WIDTH = Dimensions.get('window').width;
   return (
     <SafeAreaView
       edges={['right', 'bottom', 'left']}
-      style={{ flex: 1 }}
+      style={{ flex: 1, borderTopColor: lightTheme.primary, borderTopWidth: 1 }}
     >
       <bottomTab.Navigator
         initialRouteName='Home'
-        screenOptions={{ headerShown: false }}
+        screenOptions={{
+          tabBarActiveTintColor: lightTheme.text,
+          tabBarInactiveTintColor: lightTheme.text,
+          tabBarStyle: {
+            height: 50,
+            paddingBottom: 5,
+            paddingTop: 5,
+            borderTopColor: lightTheme.text,
+            position: 'absolute',
+            width: DEVICE_WIDTH,
+            zIndex: 100,
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+            backgroundColor: 'white',
+          },
+
+          headerShown: false,
+        }}
       >
         <bottomTab.Screen
           name='Home'
-          component={LoginScreen}
+          component={HomeScreen}
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ color }) => <HomeIcon color={color} />,
+          }}
         />
       </bottomTab.Navigator>
     </SafeAreaView>

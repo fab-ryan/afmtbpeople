@@ -101,9 +101,15 @@ function TextInputField({
   }
 
   return (
-    <View style={style}>
+    <View
+      style={[
+        {
+          width: '100%',
+        },
+      ]}
+    >
       <DefaultTextInput
-        style={[_style]}
+        style={[styles.inputContainer, _style]}
         placeholder={placeholder}
         secureTextEntry={secure}
         keyboardType={keyboardType}
@@ -141,9 +147,11 @@ export const TextInput = <T extends FieldValues = FieldValues>({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: 'black',
-    padding: 5,
+    borderWidth: 0.5,
+    padding: 15,
+    borderRadius: 10,
+    width: '100%',
+    borderColor: lightTheme.text,
   },
   errorMessage: {
     color: '#F00',

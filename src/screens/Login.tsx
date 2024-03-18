@@ -1,15 +1,27 @@
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { LayoutView, View, Text, HeaderText, TextInput } from '@components';
+import {
+  LayoutView,
+  View,
+  Text,
+  HeaderText,
+  TextInput,
+  Button,
+  ButtonLink,
+} from '@components';
 import { lightTheme } from '@constants/Colors';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginValidationSchema } from '@utils';
+import React from 'react';
+import { RootStackScreenProps } from '@utils/types';
 
 type ILoginForm = {
   email: string;
   password: string;
 };
-export default function LoginScreen() {
+export default function LoginScreen({
+  navigation,
+}: RootStackScreenProps<'Login'>) {
   const {
     control,
     handleSubmit,
@@ -23,8 +35,12 @@ export default function LoginScreen() {
     },
   });
 
+  const onSubmit = (data: ILoginForm) => {
+    navigation.navigate('Root');
+  };
+
   return (
-    <LayoutView>
+    <LayoutView backbtn={false}>
       <SafeAreaView>
         <View style={styles.container}>
           <HeaderText accessible={true}>User Login</HeaderText>
@@ -45,6 +61,20 @@ export default function LoginScreen() {
                 name='password'
                 error={errors.password?.message}
               />
+
+              <Button
+                title='LOGIN'
+                onPress={handleSubmit(onSubmit)}
+              />
+              <View style={styles.or}>
+                <Text>Don’t have an account yet? </Text>
+                <ButtonLink
+                  title='Sign Up'
+                  onPress={() => {
+                    console.log('Register');
+                  }}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -60,14 +90,22 @@ const styles = StyleSheet.create({
     padding: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    borderBottomEndRadius: 20,
+    borderBottomStartRadius: 20,
   },
 
   content: {
-    marginTop: 10,
-    gap: 10,
+    marginTop: 40,
+    gap: 20,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  or: {
+    marginTop: 20,
+    marginBottom: 10,
+    display: 'flex',
+    flexDirection: 'row',
   },
 });
