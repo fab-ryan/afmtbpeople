@@ -6,8 +6,6 @@ export default function Profile(): JSX.Element {
   return (
     <LayoutView>
       <View style={styles.container}>
-         
-       
       </View>
     </LayoutView>
   );

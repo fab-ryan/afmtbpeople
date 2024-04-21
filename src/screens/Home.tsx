@@ -8,7 +8,15 @@ export default function Home() {
   return (
     <LayoutView>
       <View style={styles.container}>
-        <HeaderText accessible={true}>Welcome </HeaderText>
+        <HeaderText accessible={true}
+          accessibilityRole='header'
+          accessibilityValue={{
+            text: 'Welcome',
+            now: 1,
+          }}
+          accessibilityHint='Welcome'
+        
+        >Welcome </HeaderText>
         <View>
           <View style={styles.content}>
             <FlatList

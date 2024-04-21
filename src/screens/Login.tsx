@@ -43,7 +43,17 @@ export default function LoginScreen({
     <LayoutView backbtn={false}>
       <SafeAreaView>
         <View style={styles.container}>
-          <HeaderText accessible={true}>User Login</HeaderText>
+          <HeaderText
+            accessible={true}
+            accessibilityRole='header'
+            accessibilityValue={{
+              text: 'User Login',
+              now: 1,
+            }}
+            accessibilityHint='User Login'
+          >
+            User Login
+          </HeaderText>
           <View>
             <View style={styles.content}>
               <TextInput

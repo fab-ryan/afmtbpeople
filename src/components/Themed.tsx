@@ -78,6 +78,7 @@ export const HeaderText: React.FC<TextProps> = (props) => {
       style={{ fontSize: 25, fontWeight: '600', color: lightTheme.text }}
       accessibilityLabel={props.children?.toString()}
       accessibilityRole='text'
+      accessibilityState={{ selected: true }}
     />
   );
 };
