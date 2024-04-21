@@ -99,7 +99,6 @@ export default function AddNewExpense({
 
         <View>
           <View style={styles.content}>
-<<<<<<< HEAD
             <View>
               <Select
                 label='Category'
@@ -115,8 +114,6 @@ export default function AddNewExpense({
               )}
             </View>
 
-=======
->>>>>>> 7b41c88 ( some UI implementa)
             <TextInput
               label='Amount'
               placeholder='Enter amount'
@@ -126,19 +123,6 @@ export default function AddNewExpense({
               keyboardType='numeric'
             />
 
-<<<<<<< HEAD
-=======
-            />
-            <TextInput
-              label='Category'
-              placeholder='Enter category'
-              control={control}
-              name='category_id'
-              error={errors.category_id?.message}
-            />
-
-          
->>>>>>> 7b41c88 ( some UI implementa)
             <TextInput
               label='Description'
               placeholder='Enter description'
