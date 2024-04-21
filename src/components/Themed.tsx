@@ -4,15 +4,20 @@ import {
   StyleSheet,
   Text as DefaultText,
   SafeAreaView,
+  NativeModules,
+  LayoutAnimation,
 } from 'react-native';
 
 import { FontAwesome } from '@expo/vector-icons';
 import layouts from '@assets/images/layouts.png';
 import { lightTheme } from '@constants/Colors';
 import React from 'react';
-import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import Svg, { Circle, Defs, G, Path, Rect, SvgXml } from 'react-native-svg';
 import { BackButton } from './Button';
 import { useNavigation } from '@react-navigation/native';
+
+import ProfileIconSvg from '@assets/images/profile.svg';
+
 type ViewProps = DefaultViews['props'];
 
 type TextProps = DefaultText['props'];
@@ -24,8 +29,15 @@ export const View: React.FC<ViewProps> = (props) => {
 type LayoutViewProps = {
   backbtn?: boolean;
 };
+
+const { UIManager } = NativeModules;
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+
 export const LayoutView = (props: LayoutViewProps & ViewProps) => {
   const navigation = useNavigation();
+  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
   return (
     <ImageBackground
       source={layouts}
@@ -91,6 +103,10 @@ export const HomeIcon = ({ color }: { color: string }) => {
   );
 };
 
+export const ProfileIcon = ({ color }: { color: string }) => {
+  return <ProfileIconSvg />;
+};
+
 export const ListIcon = () => {};
 
 export const ArrowRightIcon = ({ color }: { color: string }) => {
@@ -128,7 +144,7 @@ export const Icon = ({ name, color, size = 24 }: IconProps) => {
       size={size}
       color={color}
       style={{
-        fontWeight:'300'
+        fontWeight: '300',
       }}
     />
   );

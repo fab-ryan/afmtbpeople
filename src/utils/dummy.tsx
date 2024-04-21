@@ -28,7 +28,7 @@ export const dummyData: IDummyHomeCard[] = [
     id:2,
     title: 'Expenses',
     counts: 3,
-    navigateTo: 'Expenses',
+    navigateTo: 'Expense',
     icon: (
       <Image
         source={deposite}
@@ -36,4 +36,28 @@ export const dummyData: IDummyHomeCard[] = [
       />
     ),
   },
+  {
+    id:3,
+    title: 'Deposits',
+    counts: 19,
+    navigateTo: 'Deposit',
+    icon: (
+      <Image
+        source={deposite}
+        style={{ width: 50, height: 50 }}
+      />
+    ),
+  },
+  {
+    id:4,
+    title: 'Withdraws',
+    counts: 2,
+    navigateTo: 'Withdraw',
+    icon: (
+      <Image
+        source={deposite}
+        style={{ width: 50, height: 50 }}
+      />
+    ),
+  }
 ];

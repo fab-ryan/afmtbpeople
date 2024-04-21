@@ -1,15 +1,13 @@
 import { AddButton, Button, HeaderText, LayoutView, View } from '@components';
 import { ListView } from '@components/ListCard';
 import { lightTheme } from '@constants/Colors';
-import {
-  SafeAreaView,
-  Text,
-  StyleSheet,
-  FlatList,
-  ScrollView,
-} from 'react-native';
+import { RootStackScreenProps } from '@utils/types';
 
-export default function IncomeScreen() {
+import { StyleSheet, ScrollView } from 'react-native';
+
+export default function IncomeScreen({
+  navigation,
+}: RootStackScreenProps<'Withdraw'>) {
   return (
     <LayoutView backbtn={true}>
       <View style={styles.container}>
@@ -18,17 +16,17 @@ export default function IncomeScreen() {
             accessible={true}
             style={{ fontWeight: '600' }}
           >
-            Incomes
+            WithDraws
           </HeaderText>
           <AddButton
             title='Add'
-            onPress={() => console.log('Add Income')}
+            onPress={() => navigation.navigate('NewWithdraw')}
           />
         </View>
         <View>
-          <ScrollView style={styles.content}
+          <ScrollView
+            style={styles.content}
             showsVerticalScrollIndicator={false}
-
           >
             <ListView />
             <ListView />

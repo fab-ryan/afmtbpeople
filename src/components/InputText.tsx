@@ -12,6 +12,7 @@ import {
   TextInput as DefaultTextInput,
 } from 'react-native';
 import { Controller, ControllerProps, FieldValues } from 'react-hook-form';
+import DatePicker, { DatePickerProps } from 'react-native-date-picker';
 
 import { Text } from './Themed';
 import { lightTheme } from '@constants/Colors';
@@ -25,13 +26,27 @@ type InputTextProps = {
   secureTextEntry?: boolean;
 };
 
+type DatePickerFieldProps = {
+  containerStyle?: StyleProp<ViewStyle>;
+  label?: string;
+  error?: string | boolean;
+  placeholder?: string;
+  style?: StyleProp<TextStyle>;
+  onChange?: (e: Date) => void;
+  value: Date;
+};
+
+type ControlledDatePickerProps<T extends FieldValues> = Partial<DatePickerFieldProps> &
+  Partial<ControllerProps<T>> & Pick<ControllerProps<T>, 'name'>;
+
 type ControlledTextInputProps<T> = InputTextProps &
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   Partial<ControllerProps<T>> &
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  Pick<ControllerProps<T>, 'name'>;
+  Pick<ControllerProps<T>, 'name'> &
+  TextInputProps;
 
 function TextInputField({
   style,
@@ -142,6 +157,71 @@ export const TextInput = <T extends FieldValues = FieldValues>({
       )}
       name={name}
     />
+  );
+};
+
+export const DatePickerField = <T extends FieldValues = FieldValues>({
+  control,
+  name,
+  rules,
+  ...props
+}: ControlledDatePickerProps<T>) => {
+  return (
+    <Controller
+      control={control}
+      rules={rules}
+      render={({ field: { onChange, onBlur, value } }) => (
+        <DatePickerInput
+          {...props}
+          onChange={onChange}
+          value={value}
+          date={value}
+        />
+      )}
+      name={name}
+    />
+  );
+};
+
+const DatePickerInput = ({
+  style,
+  containerStyle,
+  error,
+  onChange,
+  value,
+  ...props
+}: DatePickerFieldProps & DatePickerProps) => {
+  const [isFocused, setOnFocus] = useState(false);
+  const toggleFocus = () => {
+    setOnFocus(!isFocused);
+  };
+
+  let _style: StyleProp<TextStyle> = [style];
+  if (isFocused) {
+    _style = [
+      ..._style,
+      {
+        borderColor: lightTheme.tint,
+      },
+    ];
+  }
+  return (
+    <View
+      style={[
+        {
+          width: '100%',
+        },
+      ]}
+    >
+      <DatePicker
+        mode='date'
+        style={[styles.inputContainer, _style]}
+        onDateChange={onChange}
+        {...props}
+        date={value}
+      />
+      {error && <Text style={styles.errorMessage}>{error}</Text>}
+    </View>
   );
 };
 
