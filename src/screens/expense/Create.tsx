@@ -16,10 +16,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { RootStackScreenProps } from '@utils/types';
 
 type INewExpense = {
-  title: string;
-  amount: number;
-  date: Date;
+  amount: string;
   description: string;
+  category_id: string;
 };
 export default function AddNewExpense({
   navigation,
@@ -32,10 +31,9 @@ export default function AddNewExpense({
     mode: 'onBlur',
     resolver: yupResolver(expenseValidationSchema),
     defaultValues: {
-      amount: 0,
-      date: new Date(),
+      amount: '0',
       description: '',
-      title: '',
+      category_id: '',
     },
   });
   const onSubmit = (data: INewExpense) => {
@@ -57,13 +55,6 @@ export default function AddNewExpense({
         <View>
           <View style={styles.content}>
             <TextInput
-              label='Title'
-              placeholder='Enter title'
-              control={control}
-              name='title'
-              error={errors.title?.message}
-            />
-            <TextInput
               label='Amount'
               placeholder='Enter amount'
               control={control}
@@ -73,12 +64,14 @@ export default function AddNewExpense({
 
             />
             <TextInput
-              label='Date'
-              placeholder='Enter date'
+              label='Category'
+              placeholder='Enter category'
               control={control}
-              name='date'
-              error={errors.date?.message}
+              name='category_id'
+              error={errors.category_id?.message}
             />
+
+          
             <TextInput
               label='Description'
               placeholder='Enter description'

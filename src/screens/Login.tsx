@@ -12,16 +12,21 @@ import { lightTheme } from '@constants/Colors';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginValidationSchema } from '@utils';
-import React from 'react';
-import { RootStackScreenProps } from '@utils/types';
+import React, { useEffect } from 'react';
+import { StackScreenProps } from '@utils/types';
+import { useLoginMutation } from '@redux';
+import { useActions } from '@hooks';
+import { useNavigation } from '@react-navigation/native';
 
 type ILoginForm = {
-  email: string;
+  username: string;
   password: string;
 };
-export default function LoginScreen({
-  navigation,
-}: RootStackScreenProps<'Login'>) {
+export default function LoginScreen() {
+  const { openToast, setAuthUser } = useActions();
+  const navigation = useNavigation<StackScreenProps>();
+  const [login, loginStates] = useLoginMutation();
+
   const {
     control,
     handleSubmit,
@@ -30,13 +35,49 @@ export default function LoginScreen({
     mode: 'onBlur',
     resolver: yupResolver(loginValidationSchema),
     defaultValues: {
-      email: '',
+      username: '',
       password: '',
     },
   });
 
+  useEffect(() => {
+    if (loginStates.isSuccess && loginStates.data.status) {
+      navigation.navigate('Root', {
+        screen: 'Home',
+      });
+    }
+  }, [loginStates.isSuccess]);
+
+  // navigation.navigate('Root');
   const onSubmit = (data: ILoginForm) => {
-    navigation.navigate('Root');
+    if (loginStates.isLoading) return;
+    const payload = {
+      username: data.username,
+      password: data.password,
+    };
+    login(payload)
+      .unwrap()
+      .then((e) => {
+        if (e.status) {
+          setAuthUser(e);
+          openToast({
+            message: e.message,
+            type: 'Success',
+          });
+        } else {
+          openToast({
+            message: e.message,
+            type: 'Failed',
+          });
+        }
+      })
+
+      .catch((e) => {
+        openToast({
+          message: e.data?.message ?? e.message,
+          type: 'Failed',
+        });
+      });
   };
 
   return (
@@ -58,10 +99,10 @@ export default function LoginScreen({
             <View style={styles.content}>
               <TextInput
                 label='Email'
-                placeholder='Enter your email'
+                placeholder='Enter your username'
                 control={control}
-                name='email'
-                error={errors.email?.message}
+                name='username'
+                error={errors.username?.message}
               />
               <TextInput
                 label='Password'
@@ -75,13 +116,14 @@ export default function LoginScreen({
               <Button
                 title='LOGIN'
                 onPress={handleSubmit(onSubmit)}
+                disabled={loginStates.isLoading}
               />
               <View style={styles.or}>
                 <Text>Don’t have an account yet? </Text>
                 <ButtonLink
                   title='Sign Up'
                   onPress={() => {
-                    console.log('Register');
+                    navigation.navigate('Register');
                   }}
                 />
               </View>

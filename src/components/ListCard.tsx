@@ -2,27 +2,33 @@ import { View, Text } from './Themed';
 import { lightTheme } from '@constants/Colors';
 import { StyleSheet } from 'react-native';
 
-export const ListView = () => {
+export const ListView = (props: any) => {
+  const validAmount = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'FWR',
+  }).format(props?.amount);
   return (
     <View style={styles.container}>
       <View style={styles.countContainer}>
-        <Text style={styles.countText}>1</Text>
+        <Text style={styles.countText}>{props.count}</Text>
       </View>
       <View style={styles.columnContainer}>
         <Text style={styles.columnText}>Source</Text>
-        <Text style={styles.columnLabel}>$500</Text>
+        <Text style={styles.columnLabel}>{props?.source}</Text>
       </View>
       <View style={styles.columnContainer}>
         <Text style={styles.columnText}>Amount</Text>
-        <Text style={styles.columnLabel}>$500</Text>
+        <Text style={styles.columnLabel}>
+          {validAmount}
+        </Text>
       </View>
-      <View style={styles.columnContainer}>
+      {/* <View style={styles.columnContainer}>
         <Text style={styles.columnText}>Balance</Text>
         <Text style={styles.columnLabel}>$500</Text>
       </View>
       <View style={styles.statusContainer}>
         <Text style={styles.statusText}>Success</Text>
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -46,9 +52,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 1.02,
     shadowRadius: 5.27,
     elevation: 25,
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
+
   },
   countText: {
     color: lightTheme.background,
@@ -71,6 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     textAlign: 'left',
+    marginLeft: 20,
   },
   columnText: {
     color: lightTheme.text,

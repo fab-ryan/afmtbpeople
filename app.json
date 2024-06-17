@@ -16,7 +16,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ryanfab.aftpeople"
+      "bundleIdentifier": "com.ryanfab.aftpeople",
+      "bitcode": false
     },
     "android": {
       "adaptiveIcon": {

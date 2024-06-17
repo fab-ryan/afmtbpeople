@@ -12,16 +12,19 @@ import { incomeValidationSchema } from '@utils';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { RootStackScreenProps } from '@utils/types';
+import { useCreateIncomeMutation } from '@redux';
+import { useActions } from '@hooks';
 
 type INewIncome = {
   title: string;
-  amount: number;
-  date: Date;
+  amount: string;
   description: string;
 };
 export default function AddNewIncome({
   navigation,
 }: RootStackScreenProps<'NewIncome'>) {
+  const [createIncome, createIncomeStates] = useCreateIncomeMutation();
+  const { openToast } = useActions();
   const {
     control,
     handleSubmit,
@@ -30,15 +33,35 @@ export default function AddNewIncome({
     mode: 'onBlur',
     resolver: yupResolver(incomeValidationSchema),
     defaultValues: {
-      amount: 0,
-      date: new Date(),
+      amount: '0',
       description: '',
       title: '',
     },
   });
   const onSubmit = (data: INewIncome) => {
-    console.log(data);
-    navigation.navigate('Income');
+    if (createIncomeStates.isLoading) return;
+    const payload = {
+      source: data.title,
+      amount: data.amount.toString(),
+      description: data.description,
+    };
+    createIncome(payload)
+      .unwrap()
+      .then((value) => {
+        if (value.status) {
+          openToast({
+            message: value?.message,
+            type: 'Success',
+          });
+          navigation.goBack();
+        }
+      })
+      .catch((err) => {
+        openToast({
+          message: err.data?.message || 'An error occurred',
+          type: 'Failed',
+        });
+      });
   };
   return (
     <LayoutView backbtn={true}>
@@ -69,14 +92,7 @@ export default function AddNewIncome({
               error={errors.amount?.message}
               keyboardType='numeric'
             />
-            <TextInput
-              label='Date'
-              placeholder='Enter date'
-              control={control}
-              name='date'
-              error={errors.date?.message}
-              keyboardType='numeric'
-            />
+
             <TextInput
               label='Description'
               placeholder='Enter description'
@@ -90,6 +106,8 @@ export default function AddNewIncome({
             <Button
               title='SAVE'
               onPress={handleSubmit(onSubmit)}
+              disabled={createIncomeStates.isLoading}
+              
             />
           </View>
         </View>

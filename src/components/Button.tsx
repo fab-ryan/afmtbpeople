@@ -75,12 +75,16 @@ const BackButton = (props: IButtonProps) => {
     </Pressable>
   );
 };
+const IconButton = (props: IButtonProps) => {
+  return <Pressable {...props}>{props.children}</Pressable>;
+};
 
 export {
   CustomButton as Button,
   TextLink as ButtonLink,
   BackButton as BackButton,
   AddButton as AddButton,
+  IconButton as IconButton,
 };
 
 const styles = StyleSheet.create({
@@ -122,9 +126,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addContainer: {
-    
     borderRadius: 30,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     shadowColor: lightTheme.tint,
     shadowOffset: {
       width: 0,
@@ -143,5 +146,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 17,
     fontWeight: '500',
-  }
+  },
 });

@@ -17,13 +17,16 @@ import AddNewDeposit from '@screens/deposite/Create';
 
 import WithdrawScreen from '@screens/withdraw';
 import AddNewWithdraw from '@screens/withdraw/Create';
+import RegisterScreen from '@screens/Register';
 
-import { HomeIcon, Icon, ListIcon,ProfileIcon } from '@components';
+import { HomeIcon, Icon, ListIcon, ProfileIcon } from '@components';
 import { Dimensions } from 'react-native';
 import ProfileScreen from '@screens/Profile';
-
+import { getToken, checkTokenExpired } from '@utils';
+import { useEffect, useState } from 'react';
 
 export default function Navigation({ firstTime }: { firstTime: boolean }) {
+  const [isLogin, setIsLogin] = useState(false);
   const light = lightTheme;
   const DefaultThemes = {
     ...DefaultTheme,
@@ -38,67 +41,97 @@ export default function Navigation({ firstTime }: { firstTime: boolean }) {
     },
     dark: false,
   };
+  const token = new Promise((resolve, reject) => {
+    getToken((value) => {
+      if (value) {
+        resolve(value);
+      } else {
+        reject(new Error('Token not found'));
+      }
+    });
+  });
+
+  useEffect(() => {
+    token.then((value) => {
+      if (value) setIsLogin(true);
+    });
+  }, [token]);
+
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={DefaultThemes}>
-        <RootNavigator />
+        <RootNavigator isLogin={isLogin} />
       </NavigationContainer>
     </SafeAreaProvider>
   );
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-function RootNavigator() {
+function RootNavigator({ isLogin }: { isLogin: boolean }) {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName='Root'
+      initialRouteName={isLogin ? 'Root' : 'Login'}
     >
-      <Stack.Screen
-        name='Login'
-        component={LoginScreen}
-      />
+      {isLogin && (
+        <>
+          <Stack.Screen
+            name='Root'
+            component={BottomTabNavigator}
+          />
+          <Stack.Screen
+            name='Income'
+            component={IncomeScreen}
+          />
+          <Stack.Screen
+            name='NewIncome'
+            component={AddNewIncome}
+          />
 
-      <Stack.Screen
-        name='Root'
-        component={BottomTabNavigator}
-      />
-      <Stack.Screen
-        name='Income'
-        component={IncomeScreen}
-      />
-      <Stack.Screen
-        name='NewIncome'
-        component={AddNewIncome}
-      />
+          <Stack.Screen
+            name='Expense'
+            component={ExpenseScreen}
+          />
+          <Stack.Screen
+            name='NewExpense'
+            component={AddNewExpense}
+          />
 
-      <Stack.Screen
-        name='Expense'
-        component={ExpenseScreen}
-      />
-      <Stack.Screen
-        name='NewExpense'
-        component={AddNewExpense}
-      />
+          <Stack.Screen
+            name='Deposit'
+            component={DepositScreen}
+          />
 
-      <Stack.Screen
-        name='Deposit'
-        component={DepositScreen}
-      />
+          <Stack.Screen
+            name='NewDeposit'
+            component={AddNewDeposit}
+          />
 
-      <Stack.Screen
-        name='NewDeposit'
-        component={AddNewDeposit}
-      />
+          <Stack.Screen
+            name='Withdraw'
+            component={WithdrawScreen}
+          />
+          <Stack.Screen
+            name='NewWithdraw'
+            component={AddNewWithdraw}
+          />
+        </>
+      )}
+      {
+        !isLogin && (
 
-      <Stack.Screen
-        name='Withdraw'
-        component={WithdrawScreen}
-      />
-      <Stack.Screen
-        name='NewWithdraw'
-        component={AddNewWithdraw}
-      />
+        <>
+          <Stack.Screen
+            name='Login'
+            component={LoginScreen}
+          />
+          <Stack.Screen
+            name='Register'
+            component={RegisterScreen}
+          />
+        </>
+        )
+      }
     </Stack.Navigator>
   );
 }
@@ -128,7 +161,6 @@ function BottomTabNavigator() {
             borderTopRightRadius: 24,
             backgroundColor: 'white',
             overflow: 'hidden',
-
           },
 
           headerShown: false,

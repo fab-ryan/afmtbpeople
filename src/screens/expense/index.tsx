@@ -5,9 +5,18 @@ import { RootStackScreenProps } from '@utils/types';
 
 import { StyleSheet, ScrollView } from 'react-native';
 
+import { useGetExpensesQuery } from '@redux';
+import { ExpenseInterface } from '@types';
+
+const ListViewIncome = (expense: ExpenseInterface & { count: number }) => {
+  return <ListView {...expense} />;
+};
+
 export default function ExpenseScreen({
   navigation,
 }: RootStackScreenProps<'Expense'>) {
+  const { data, error, isLoading } = useGetExpensesQuery(undefined);
+  console.log(data);
   return (
     <LayoutView backbtn={true}>
       <View style={styles.container}>
@@ -26,11 +35,27 @@ export default function ExpenseScreen({
         <View>
           <View style={styles.content}>
             <ScrollView>
-              <ListView />
-              <ListView />
-              <ListView />
-              <ListView />
-              <ListView />
+              {!isLoading &&
+                data &&
+                data?.data?.expenses?.map((expense, index) => (
+                  <ListViewIncome
+                    key={expense.id}
+                    count={index + 1}
+                    {...expense}
+                  />
+                ))}
+              {!isLoading && data?.data && data?.data?.length === 0 && (
+                <HeaderText
+                  style={{
+                    textAlign: 'center',
+                    marginTop: 20,
+                    fontSize: 20,
+                    color: lightTheme.text,
+                  }}
+                >
+                  No expenses yet
+                </HeaderText>
+              )}
             </ScrollView>
           </View>
         </View>

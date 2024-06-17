@@ -4,10 +4,16 @@ import { lightTheme } from '@constants/Colors';
 import { RootStackScreenProps } from '@utils/types';
 
 import { StyleSheet, ScrollView } from 'react-native';
+import { useGetIncomesQuery } from '@redux';
+import { IncomeInterface } from '@types';
 
+const ListViewIncome = (income: IncomeInterface & { count: number }) => {
+  return <ListView {...income} />;
+};
 export default function IncomeScreen({
   navigation,
 }: RootStackScreenProps<'Income'>) {
+  const { data, error, isLoading } = useGetIncomesQuery(null);
   return (
     <LayoutView backbtn={true}>
       <View style={styles.container}>
@@ -20,7 +26,7 @@ export default function IncomeScreen({
           </HeaderText>
           <AddButton
             title='Add'
-            onPress={() => navigation.navigate('NewExpense')}
+            onPress={() => navigation.navigate('NewIncome')}
           />
         </View>
         <View>
@@ -28,13 +34,15 @@ export default function IncomeScreen({
             style={styles.content}
             showsVerticalScrollIndicator={false}
           >
-            <ListView />
-            <ListView />
-            <ListView />
-            <ListView />
-            <ListView />
-            <ListView />
-            <ListView />
+            {!isLoading &&
+              data &&
+              data?.data?.incomes.map((income, index) => (
+                <ListViewIncome
+                  key={income.id}
+                  count={index + 1}
+                  {...income}
+                />
+              ))}
           </ScrollView>
         </View>
       </View>
