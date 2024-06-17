@@ -25,7 +25,6 @@ type ILoginForm = {
   username: string;
   password: string;
 };
-
 export default function LoginScreen() {
   const { openToast, setAuthUser } = useActions();
   const navigation = useNavigation<StackScreenProps>();
