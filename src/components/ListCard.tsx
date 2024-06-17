@@ -201,7 +201,7 @@ export const TransactionListView = (props: any) => {
       
       <View style={styles.statusContainer}>
         <Text style={styles.statusText}>Success</Text>
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
+
   },
   countText: {
     color: lightTheme.background,
