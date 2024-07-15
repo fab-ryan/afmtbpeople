@@ -480,6 +480,60 @@ export const TransactionListView = (props: any) => {
   );
 };
 
+export const ExpenseListView = (props: any) => {
+  const validAmount = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'FWR',
+  }).format(props?.amount);
+  return (
+    <View style={styles.container}>
+      <View style={styles.countContainer}>
+        <Text style={styles.countText}>{props.count}</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Category</Text>
+        <Text style={styles.columnLabel}>{props?.category?.name}</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Amount</Text>
+        <Text style={styles.columnLabel}>{validAmount}</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}></Text>
+        <View style={styles.statusContainer}>
+          <Text style={styles.statusText}>Success</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export const TransactionListView = (props: any) => {
+  const validAmount = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'FWR',
+  }).format(props?.amount);
+  return (
+    <View style={styles.container}>
+      <View style={styles.countContainer}>
+        <Text style={styles.countText}>2</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Category</Text>
+        <Text style={styles.columnLabel}>Cateegory </Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Amount</Text>
+        <Text style={styles.columnLabel}>9000</Text>
+      </View>
+      
+      <View style={styles.statusContainer}>
+        <Text style={styles.statusText}>Success</Text>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -502,7 +556,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
-
   },
   countText: {
     color: lightTheme.background,
