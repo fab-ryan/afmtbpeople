@@ -5,7 +5,7 @@ import { CategoriesResponse } from '@types';
 export const categoryApi = createApi({
   reducerPath: 'category',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${baseUrl}/api/categories`,
+    baseUrl: `${baseUrl}/api/expense-category`,
     prepareHeaders: async (headers) => {
       try {
         const token = await new Promise((resolve, reject) => {
@@ -27,7 +27,7 @@ export const categoryApi = createApi({
   }),
   tagTypes: ['category'],
   endpoints: (build) => ({
-    getCategories: build.query<CategoriesResponse, null>({
+    getCategories: build.query<CategoriesResponse, undefined>({
       query: () => ({
         url: '/',
         method: 'GET',

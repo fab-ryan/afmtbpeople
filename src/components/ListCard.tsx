@@ -18,9 +18,7 @@ export const ListView = (props: any) => {
       </View>
       <View style={styles.columnContainer}>
         <Text style={styles.columnText}>Amount</Text>
-        <Text style={styles.columnLabel}>
-          {validAmount}
-        </Text>
+        <Text style={styles.columnLabel}>{validAmount}</Text>
       </View>
       {/* <View style={styles.columnContainer}>
         <Text style={styles.columnText}>Balance</Text>
@@ -29,6 +27,60 @@ export const ListView = (props: any) => {
       <View style={styles.statusContainer}>
         <Text style={styles.statusText}>Success</Text>
       </View> */}
+    </View>
+  );
+};
+
+export const ExpenseListView = (props: any) => {
+  const validAmount = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'FWR',
+  }).format(props?.amount);
+  return (
+    <View style={styles.container}>
+      <View style={styles.countContainer}>
+        <Text style={styles.countText}>{props.count}</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Category</Text>
+        <Text style={styles.columnLabel}>{props?.category?.name}</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Amount</Text>
+        <Text style={styles.columnLabel}>{validAmount}</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}></Text>
+        <View style={styles.statusContainer}>
+          <Text style={styles.statusText}>Success</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export const TransactionListView = (props: any) => {
+  const validAmount = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'FWR',
+  }).format(props?.amount);
+  return (
+    <View style={styles.container}>
+      <View style={styles.countContainer}>
+        <Text style={styles.countText}>2</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Category</Text>
+        <Text style={styles.columnLabel}>Cateegory </Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Amount</Text>
+        <Text style={styles.columnLabel}>9000</Text>
+      </View>
+      
+      <View style={styles.statusContainer}>
+        <Text style={styles.statusText}>Success</Text>
+      </View>
     </View>
   );
 };
@@ -46,20 +98,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     shadowColor: lightTheme.text,
     shadowOffset: {
-      width: 0,
+      width: 1,
       height: 3,
     },
     shadowOpacity: 1.02,
     shadowRadius: 5.27,
-    elevation: 25,
+    elevation: 10,
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
-
   },
   countText: {
     color: lightTheme.background,
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: '900',
     textAlign: 'center',
   },
@@ -68,8 +119,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-    width: 40,
-    height: 40,
+    width: 25,
+    height: 25,
     borderRadius: 120 / 2,
     backgroundColor: lightTheme.primary,
   },
@@ -82,13 +133,13 @@ const styles = StyleSheet.create({
   },
   columnText: {
     color: lightTheme.text,
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '700',
     textAlign: 'center',
   },
   columnLabel: {
     color: lightTheme.secondary,
-    fontSize: 18,
+    fontSize: 15,
     textAlign: 'left',
     marginTop: 5,
   },
@@ -99,12 +150,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRadius: 20,
     backgroundColor: '#4A97CE',
-    paddingHorizontal: 5,
-    paddingVertical: 5,
+    paddingHorizontal: 10,
+    paddingVertical:10,
   },
   statusText: {
     color: lightTheme.background,
-    fontSize: 10,
+    fontSize: 14,
     fontWeight: '700',
     textAlign: 'center',
   },

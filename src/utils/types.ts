@@ -26,6 +26,7 @@ export type StackScreenProps = StackNavigationProp<RootStackParamList>;
 
 export type RootTabParamList = {
   Home: undefined;
+  Reports: undefined;
   Profile: undefined;
 };
 

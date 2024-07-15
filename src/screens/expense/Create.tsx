@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   Button,
+  Select,
 } from '@components';
 
 import { lightTheme } from '@constants/Colors';
@@ -14,6 +15,13 @@ import { expenseValidationSchema } from '@utils';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { RootStackScreenProps } from '@utils/types';
+import { useEffect, useState } from 'react';
+import { useGetCategoriesQuery, useCreateExpenseMutation } from '@redux';
+import { useActions } from '@hooks';
+interface ICategory {
+  label: string;
+  value: string;
+}
 
 type INewExpense = {
   amount: string;
@@ -23,9 +31,27 @@ type INewExpense = {
 export default function AddNewExpense({
   navigation,
 }: RootStackScreenProps<'NewExpense'>) {
+  const { openToast } = useActions();
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const { data, error, isLoading } = useGetCategoriesQuery(undefined);
+  const [createExpense, expenseStates] = useCreateExpenseMutation();
+
+  useEffect(() => {
+    if (data) {
+      setCategories(
+        data?.data?.map((category) => ({
+          label: category.name,
+          value: category.id,
+        })),
+      );
+    }
+  }, [data]);
+
   const {
     control,
     handleSubmit,
+    setValue,
+    setError,
     formState: { errors },
   } = useForm<INewExpense>({
     mode: 'onBlur',
@@ -37,8 +63,27 @@ export default function AddNewExpense({
     },
   });
   const onSubmit = (data: INewExpense) => {
-    console.log(data);
-    navigation.navigate('Expense');
+    const payload = {
+      amount: data.amount,
+      comment: data.description,
+      category_id: data.category_id,
+    };
+    createExpense(payload)
+      .unwrap()
+      .then((res) => {
+        if (res.status) {
+          openToast({
+            message: res?.message,
+            type: 'Success',
+          });
+          navigation.navigate('Expense');
+        }
+      })
+      .catch((err) => {
+        if (err.status === 400) {
+          console.log(err.data);
+        }
+      });
   };
   return (
     <LayoutView backbtn={true}>
@@ -54,6 +99,21 @@ export default function AddNewExpense({
 
         <View>
           <View style={styles.content}>
+            <View>
+              <Select
+                label='Category'
+                options={categories}
+                onSelect={(option) =>
+                  setValue('category_id', option?.value as string)
+                }
+              />
+              {errors.category_id && (
+                <Text style={{ color: 'red' }}>
+                  {errors.category_id.message}
+                </Text>
+              )}
+            </View>
+
             <TextInput
               label='Amount'
               placeholder='Enter amount'
@@ -61,17 +121,8 @@ export default function AddNewExpense({
               name='amount'
               error={errors.amount?.message}
               keyboardType='numeric'
-
-            />
-            <TextInput
-              label='Category'
-              placeholder='Enter category'
-              control={control}
-              name='category_id'
-              error={errors.category_id?.message}
             />
 
-          
             <TextInput
               label='Description'
               placeholder='Enter description'

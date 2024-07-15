@@ -1,8 +1,6 @@
 import { Response } from './response';
 export interface CategoriesResponse extends Response {
-  data: {
-    categories: Category[];
-  };
+  data: Category[];
 }
 
 export interface Category {

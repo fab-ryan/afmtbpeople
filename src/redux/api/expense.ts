@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseUrl, getToken } from '@utils';
-import { ExpensesResponse } from '@types';
+import { ExpensePayload, ExpensesResponse } from '@types';
 
 export const expenseApi = createApi({
   reducerPath: 'expense',
@@ -33,7 +33,14 @@ export const expenseApi = createApi({
         method: 'GET',
       }),
     }),
+    createExpense: build.mutation<ExpensesResponse, ExpensePayload>({
+      query: (body) => ({
+        url: '/',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetExpensesQuery } = expenseApi;
+export const { useGetExpensesQuery, useCreateExpenseMutation } = expenseApi;

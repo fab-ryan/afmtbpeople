@@ -1,5 +1,12 @@
-import { AddButton, Button, HeaderText, LayoutView, View } from '@components';
-import { ListView } from '@components/ListCard';
+import {
+  AddButton,
+  Button,
+  HeaderText,
+  LayoutView,
+  View,
+  Loader,
+} from '@components';
+import { ExpenseListView, ListView } from '@components/ListCard';
 import { lightTheme } from '@constants/Colors';
 import { RootStackScreenProps } from '@utils/types';
 
@@ -9,14 +16,13 @@ import { useGetExpensesQuery } from '@redux';
 import { ExpenseInterface } from '@types';
 
 const ListViewIncome = (expense: ExpenseInterface & { count: number }) => {
-  return <ListView {...expense} />;
+  return <ExpenseListView {...expense} />;
 };
 
 export default function ExpenseScreen({
   navigation,
 }: RootStackScreenProps<'Expense'>) {
   const { data, error, isLoading } = useGetExpensesQuery(undefined);
-  console.log(data);
   return (
     <LayoutView backbtn={true}>
       <View style={styles.container}>
@@ -34,27 +40,44 @@ export default function ExpenseScreen({
         </View>
         <View>
           <View style={styles.content}>
-            <ScrollView>
+            <ScrollView
+              style={{
+                height: '100%',
+                marginTop: 20,
+                gap: 10,
+                padding: 5,
+              }}
+            >
               {!isLoading &&
                 data &&
-                data?.data?.expenses?.map((expense, index) => (
+                data?.data?.map((expense, index) => (
                   <ListViewIncome
                     key={expense.id}
                     count={index + 1}
                     {...expense}
                   />
                 ))}
+              {/* {isLoading && <Loader loading={isLoading} />} */}
               {!isLoading && data?.data && data?.data?.length === 0 && (
-                <HeaderText
+                <View
                   style={{
-                    textAlign: 'center',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     marginTop: 20,
-                    fontSize: 20,
-                    color: lightTheme.text,
                   }}
                 >
-                  No expenses yet
-                </HeaderText>
+                  <HeaderText
+                    style={{
+                      textAlign: 'center',
+                      marginTop: 20,
+                      fontSize: 20,
+                      color: lightTheme.secondary,
+                    }}
+                  >
+                    No expenses yet
+                  </HeaderText>
+                </View>
               )}
             </ScrollView>
           </View>

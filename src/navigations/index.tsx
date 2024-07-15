@@ -19,7 +19,9 @@ import WithdrawScreen from '@screens/withdraw';
 import AddNewWithdraw from '@screens/withdraw/Create';
 import RegisterScreen from '@screens/Register';
 
-import { HomeIcon, Icon, ListIcon, ProfileIcon } from '@components';
+import ReportScreen from '@screens/Report';
+
+import { HomeIcon, Icon, ListIcon, ProfileIcon ,ClockIcon} from '@components';
 import { Dimensions } from 'react-native';
 import ProfileScreen from '@screens/Profile';
 import { getToken, checkTokenExpired } from '@utils';
@@ -52,11 +54,12 @@ export default function Navigation({ firstTime }: { firstTime: boolean }) {
   });
 
   useEffect(() => {
+    setTimeout(() => {
     token.then((value) => {
       if (value) setIsLogin(true);
     });
+    }, 1000);
   }, [token]);
-
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={DefaultThemes}>
@@ -131,7 +134,7 @@ function RootNavigator({ isLogin }: { isLogin: boolean }) {
           />
         </>
         )
-      }
+      } 
     </Stack.Navigator>
   );
 }
@@ -172,6 +175,14 @@ function BottomTabNavigator() {
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ color }) => <HomeIcon color={color} />,
+          }}
+        />
+        <bottomTab.Screen
+          name='Reports'
+          component={ReportScreen}
+          options={{
+            tabBarLabel: 'Reports',
+            tabBarIcon: ({ color }) => <ClockIcon color={color} />,
           }}
         />
         <bottomTab.Screen

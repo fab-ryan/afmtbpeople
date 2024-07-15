@@ -9,6 +9,7 @@ type props = {
   onToggle?: () => void;
   children?: ReactNode;
   title?: string;
+  modal_only?: boolean;
 };
 
 export default function CustomModal({
@@ -16,6 +17,7 @@ export default function CustomModal({
   onToggle,
   children,
   title,
+  modal_only = true,
 }: props) {
   return (
     <Modal
@@ -26,22 +28,24 @@ export default function CustomModal({
       statusBarTranslucent
     >
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <View style={styles.modalHeader}>
-            <IconButton
-              style={styles.closeBtn}
-              title='Close'
-              onPress={onToggle as () => void}
-            >
-              <Icon
-                name='close'
-                size={30}
-                color='black'
-              />
-            </IconButton>
-            <Text style={styles.modalTitle}>{title}</Text>
-            <View />
-          </View>
+        <View style={modal_only ? styles.modalView : styles.modalView_dark}>
+          {modal_only && (
+            <View style={styles.modalHeader}>
+              <IconButton
+                style={styles.closeBtn}
+                title='Close'
+                onPress={onToggle as () => void}
+              >
+                <Icon
+                  name='close'
+                  size={30}
+                  color='black'
+                />
+              </IconButton>
+              <Text style={styles.modalTitle}>{title}</Text>
+              <View />
+            </View>
+          )}
           {children}
         </View>
       </View>
@@ -53,27 +57,32 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.2)',
   },
   modalView: {
+    backgroundColor: 'white',
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
     paddingHorizontal: 35,
     paddingBottom: 35,
     paddingTop: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 5,
+  },
+  modalView_dark: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
   modalHeader: {
     justifyContent: 'space-between',
     flexDirection: 'row-reverse',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: 'lightgrey',
+    paddingBottom: 20,
   },
   modalTitle: {
     fontWeight: '600',
