@@ -130,6 +130,7 @@ function TextInputField({
         keyboardType={keyboardType}
         onBlur={onBlurhandler}
         onFocus={onFocusHandler}
+        
         {...props}
       />
       {error && <Text style={styles.errorMessage}>{error}</Text>}

@@ -1,25 +1,204 @@
 import { View, Text } from './Themed';
 import { lightTheme } from '@constants/Colors';
 import { StyleSheet } from 'react-native';
+import Voice from '@react-native-voice/voice';
+import Tts from 'react-native-tts';
+import { useEffect } from 'react';
 
-export const ListView = () => {
+export const ListView = (props: any) => {
+  const validAmount = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'FWR',
+  }).format(props?.amount);
+  useEffect(() => {
+    // Initialize voice recognition
+    Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechEnd = onSpeechEnd;
+    // startVoiceRecognition();
+
+    // Read income details when component mounts
+    readIncomeDetails();
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+
+
+  const startVoiceRecognition = async () => {
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onSpeechResults = (e: any) => {
+    const result = e.value[0].toLowerCase();
+    if (result.includes('read income')) {
+      readIncomeDetails();
+    }
+  };
+
+  const onSpeechEnd = () => {
+    // Optionally, you can restart voice recognition here if needed
+    startVoiceRecognition();
+  };
+
+  const readIncomeDetails = () => {
+    Tts.speak(`Income ${props.count}, source ${props.source}, amount ${validAmount}`);
+  };
+
+  
   return (
     <View style={styles.container}>
       <View style={styles.countContainer}>
-        <Text style={styles.countText}>1</Text>
+        <Text style={styles.countText}>{props.count}</Text>
       </View>
       <View style={styles.columnContainer}>
         <Text style={styles.columnText}>Source</Text>
-        <Text style={styles.columnLabel}>$500</Text>
+        <Text style={styles.columnLabel}>{props?.source}</Text>
       </View>
       <View style={styles.columnContainer}>
         <Text style={styles.columnText}>Amount</Text>
-        <Text style={styles.columnLabel}>$500</Text>
+        <Text style={styles.columnLabel}>{validAmount}</Text>
+      </View>
+    
+    </View>
+  );
+};
+
+export const ExpenseListView = (props: any) => {
+  const validAmount = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'FWR',
+  }).format(props?.amount);
+
+  useEffect(() => { 
+    // Initialize voice recognition
+    Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechEnd = onSpeechEnd;
+    // startVoiceRecognition();
+
+    // Read expense details when component mounts
+    readExpenseDetails();
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }
+  , []);
+
+  const startVoiceRecognition = async () => {
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onSpeechResults = (e: any) => {
+    const result = e.value[0].toLowerCase();
+    if (result.includes('read expense')) {
+      readExpenseDetails();
+    }
+  };
+
+  const onSpeechEnd = () => {
+    // Optionally, you can restart voice recognition here if needed
+    startVoiceRecognition();
+  };
+
+  const readExpenseDetails = () => {
+    Tts.speak(`Expense ${props.count}, category ${props.category.name}, amount ${validAmount}, status success`);
+  };
+
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.countContainer}
+
+      >
+        <Text style={styles.countText}
+
+        >{props.count}</Text>
       </View>
       <View style={styles.columnContainer}>
-        <Text style={styles.columnText}>Balance</Text>
-        <Text style={styles.columnLabel}>$500</Text>
+        <Text style={styles.columnText}>Category</Text>
+        <Text style={styles.columnLabel}>{props?.category?.name}</Text>
       </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Amount</Text>
+        <Text style={styles.columnLabel}>{validAmount}</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}></Text>
+        <View style={styles.statusContainer}>
+          <Text style={styles.statusText}>Success</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export const TransactionListView = (props: any) => {
+  const validAmount = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'FWR',
+  }).format(props?.amount);
+
+  useEffect(() => {
+    // Initialize voice recognition
+    Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechEnd = onSpeechEnd;
+    // startVoiceRecognition();
+
+    // Read transaction details when component mounts
+    readTransactionDetails();
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+
+  const startVoiceRecognition = async () => {
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onSpeechResults = (e: any) => {
+    const result = e.value[0].toLowerCase();
+    if (result.includes('read transaction')) {
+      readTransactionDetails();
+    }
+  };
+
+  const onSpeechEnd = () => {
+    // Optionally, you can restart voice recognition here if needed
+    startVoiceRecognition();
+  };
+
+  const readTransactionDetails = () => {
+    Tts.speak(`Transaction ${props.count}, category ${props?.category?.name}, amount ${validAmount}, status success`);
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.countContainer}>
+        <Text style={styles.countText}>2</Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Category</Text>
+        <Text style={styles.columnLabel}>Cateegory </Text>
+      </View>
+      <View style={styles.columnContainer}>
+        <Text style={styles.columnText}>Amount</Text>
+        <Text style={styles.columnLabel}>9000</Text>
+      </View>
+      
       <View style={styles.statusContainer}>
         <Text style={styles.statusText}>Success</Text>
       </View>
@@ -40,19 +219,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     shadowColor: lightTheme.text,
     shadowOffset: {
-      width: 0,
+      width: 1,
       height: 3,
     },
     shadowOpacity: 1.02,
     shadowRadius: 5.27,
-    elevation: 25,
-    justifyContent: 'space-between',
+    elevation: 10,
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
   },
   countText: {
     color: lightTheme.background,
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: '900',
     textAlign: 'center',
   },
@@ -61,8 +240,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-    width: 40,
-    height: 40,
+    width: 25,
+    height: 25,
     borderRadius: 120 / 2,
     backgroundColor: lightTheme.primary,
   },
@@ -71,16 +250,17 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     textAlign: 'left',
+    marginLeft: 20,
   },
   columnText: {
     color: lightTheme.text,
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '700',
     textAlign: 'center',
   },
   columnLabel: {
     color: lightTheme.secondary,
-    fontSize: 18,
+    fontSize: 15,
     textAlign: 'left',
     marginTop: 5,
   },
@@ -91,12 +271,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRadius: 20,
     backgroundColor: '#4A97CE',
-    paddingHorizontal: 5,
-    paddingVertical: 5,
+    paddingHorizontal: 10,
+    paddingVertical:10,
   },
   statusText: {
     color: lightTheme.background,
-    fontSize: 10,
+    fontSize: 14,
     fontWeight: '700',
     textAlign: 'center',
   },
