@@ -1,5 +1,6 @@
+import { authApi } from '@redux/api';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { AuthResponse } from '@types';
+import { AuthResponse, UserInfoReturnType } from '@types';
 import { setToken, getToken, removeToken } from '@utils';
 
 type InitialStateType = {
