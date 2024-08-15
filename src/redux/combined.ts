@@ -1,6 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import { authApi, categoryApi,incomeApi, expenseApi } from './api';
+import {
+  authApi,
+  categoryApi,
+  incomeApi,
+  expenseApi,
+  statisticsApi,
+} from './api';
 import toastReducer from './slice/toast';
 import modalReducer from './slice/modal';
 import authUser from './slice/authUser';
@@ -12,6 +18,7 @@ export const combinedStore = combineReducers({
   [categoryApi.reducerPath]: categoryApi.reducer,
   [incomeApi.reducerPath]: incomeApi.reducer,
   [expenseApi.reducerPath]: expenseApi.reducer,
+  [statisticsApi.reducerPath]: statisticsApi.reducer,
 
   toast: toastReducer,
   modal: modalReducer,

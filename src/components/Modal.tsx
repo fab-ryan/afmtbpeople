@@ -22,7 +22,7 @@ export default function CustomModal({
   return (
     <Modal
       animationType='slide'
-      transparent={true}
+      transparent={false}
       visible={visible}
       onRequestClose={onToggle}
       statusBarTranslucent

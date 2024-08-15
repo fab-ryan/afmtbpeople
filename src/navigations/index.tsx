@@ -24,11 +24,13 @@ import ReportScreen from '@screens/Report';
 import { HomeIcon, Icon, ListIcon, ProfileIcon ,ClockIcon} from '@components';
 import { Dimensions } from 'react-native';
 import ProfileScreen from '@screens/Profile';
-import { getToken, checkTokenExpired } from '@utils';
-import { useEffect, useState } from 'react';
+import { useUserInfoQuery } from '@redux';
+import { useSelector } from '@hooks';
 
 export default function Navigation({ firstTime }: { firstTime: boolean }) {
-  const [isLogin, setIsLogin] = useState(false);
+  useUserInfoQuery(null);
+  const {isLogged,data} = useSelector((state) => state.userInfo);
+  console.log(isLogged);
   const light = lightTheme;
   const DefaultThemes = {
     ...DefaultTheme,
@@ -43,27 +45,12 @@ export default function Navigation({ firstTime }: { firstTime: boolean }) {
     },
     dark: false,
   };
-  const token = new Promise((resolve, reject) => {
-    getToken((value) => {
-      if (value) {
-        resolve(value);
-      } else {
-        reject(new Error('Token not found'));
-      }
-    });
-  });
-
-  useEffect(() => {
-    setTimeout(() => {
-    token.then((value) => {
-      if (value) setIsLogin(true);
-    });
-    }, 1000);
-  }, [token]);
+  console.log(data);
+ 
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={DefaultThemes}>
-        <RootNavigator isLogin={isLogin} />
+        <RootNavigator isLogin={isLogged} />
       </NavigationContainer>
     </SafeAreaProvider>
   );

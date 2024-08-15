@@ -11,17 +11,13 @@ function Loader({ loading }: LoaderProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setTimeout(() => {
       if (loading) setIsLoading(true);
       else setIsLoading(false);
-    }, 100);
   }, [loading]);
 
   return (
     <Modal
-      visible={!isLoading}
       modal_only={false}
-      onToggle={() => setIsLoading(!isLoading)}
     >
       <View style={styles.container}>
         <ActivityIndicator

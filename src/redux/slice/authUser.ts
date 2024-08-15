@@ -1,5 +1,6 @@
+import { authApi } from '@redux/api';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { AuthResponse } from '@types';
+import { AuthResponse, UserInfoReturnType } from '@types';
 import { setToken, getToken, removeToken } from '@utils';
 
 type InitialStateType = {
@@ -9,16 +10,18 @@ type InitialStateType = {
 };
 
 type UserInfoReturnTypes = {
-  // data: UserInfoReturnType | null;
+  data: UserInfoReturnType | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any;
   loading: boolean;
+  isLogged: boolean;
 };
 
 const initialStateUser: UserInfoReturnTypes = {
-  // data: null,
+  data: null,
   error: null,
   loading: false,
+  isLogged: false,
 };
 const initialState: InitialStateType = {
   token: {
@@ -76,24 +79,27 @@ const UserInfo = createSlice({
   initialState: initialStateUser,
   reducers: {},
   extraReducers: (build) => {
-    // build.addMatcher(authApi.endpoints.userInfo.matchPending, (state) => {
-    //   state.loading = true;
-    //   state.error = null;
-    // });
-    // build.addMatcher(
-    //   authApi.endpoints.userInfo.matchFulfilled,
-    //   (state, action) => {
-    //     state.loading = false;
-    //     state.data = action.payload;
-    //   },
-    // );
-    // build.addMatcher(
-    //   authApi.endpoints.userInfo.matchRejected,
-    //   (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.error;
-    //   },
-    // );
+    build.addMatcher(authApi.endpoints.userInfo.matchPending, (state) => {
+      state.loading = true;
+      state.error = null;
+      state.isLogged = false;
+    });
+    build.addMatcher(
+      authApi.endpoints.userInfo.matchFulfilled,
+      (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.isLogged = true;
+      },
+    );
+    build.addMatcher(
+      authApi.endpoints.userInfo.matchRejected,
+      (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+        state.isLogged = false;
+      },
+    );
   },
 });
 

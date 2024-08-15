@@ -1,12 +1,55 @@
 import { View, Text } from './Themed';
 import { lightTheme } from '@constants/Colors';
 import { StyleSheet } from 'react-native';
+import Voice from '@react-native-voice/voice';
+import Tts from 'react-native-tts';
+import { useEffect } from 'react';
 
 export const ListView = (props: any) => {
   const validAmount = Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'FWR',
   }).format(props?.amount);
+  useEffect(() => {
+    // Initialize voice recognition
+    Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechEnd = onSpeechEnd;
+    // startVoiceRecognition();
+
+    // Read income details when component mounts
+    readIncomeDetails();
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+
+
+  const startVoiceRecognition = async () => {
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onSpeechResults = (e: any) => {
+    const result = e.value[0].toLowerCase();
+    if (result.includes('read income')) {
+      readIncomeDetails();
+    }
+  };
+
+  const onSpeechEnd = () => {
+    // Optionally, you can restart voice recognition here if needed
+    startVoiceRecognition();
+  };
+
+  const readIncomeDetails = () => {
+    Tts.speak(`Income ${props.count}, source ${props.source}, amount ${validAmount}`);
+  };
+
+  
   return (
     <View style={styles.container}>
       <View style={styles.countContainer}>
@@ -20,13 +63,7 @@ export const ListView = (props: any) => {
         <Text style={styles.columnText}>Amount</Text>
         <Text style={styles.columnLabel}>{validAmount}</Text>
       </View>
-      {/* <View style={styles.columnContainer}>
-        <Text style={styles.columnText}>Balance</Text>
-        <Text style={styles.columnLabel}>$500</Text>
-      </View>
-      <View style={styles.statusContainer}>
-        <Text style={styles.statusText}>Success</Text>
-      </View> */}
+    
     </View>
   );
 };
@@ -36,10 +73,55 @@ export const ExpenseListView = (props: any) => {
     style: 'currency',
     currency: 'FWR',
   }).format(props?.amount);
+
+  useEffect(() => { 
+    // Initialize voice recognition
+    Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechEnd = onSpeechEnd;
+    // startVoiceRecognition();
+
+    // Read expense details when component mounts
+    readExpenseDetails();
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }
+  , []);
+
+  const startVoiceRecognition = async () => {
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onSpeechResults = (e: any) => {
+    const result = e.value[0].toLowerCase();
+    if (result.includes('read expense')) {
+      readExpenseDetails();
+    }
+  };
+
+  const onSpeechEnd = () => {
+    // Optionally, you can restart voice recognition here if needed
+    startVoiceRecognition();
+  };
+
+  const readExpenseDetails = () => {
+    Tts.speak(`Expense ${props.count}, category ${props.category.name}, amount ${validAmount}, status success`);
+  };
+
+
   return (
     <View style={styles.container}>
-      <View style={styles.countContainer}>
-        <Text style={styles.countText}>{props.count}</Text>
+      <View style={styles.countContainer}
+
+      >
+        <Text style={styles.countText}
+
+        >{props.count}</Text>
       </View>
       <View style={styles.columnContainer}>
         <Text style={styles.columnText}>Category</Text>
@@ -64,6 +146,45 @@ export const TransactionListView = (props: any) => {
     style: 'currency',
     currency: 'FWR',
   }).format(props?.amount);
+
+  useEffect(() => {
+    // Initialize voice recognition
+    Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechEnd = onSpeechEnd;
+    // startVoiceRecognition();
+
+    // Read transaction details when component mounts
+    readTransactionDetails();
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+
+  const startVoiceRecognition = async () => {
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onSpeechResults = (e: any) => {
+    const result = e.value[0].toLowerCase();
+    if (result.includes('read transaction')) {
+      readTransactionDetails();
+    }
+  };
+
+  const onSpeechEnd = () => {
+    // Optionally, you can restart voice recognition here if needed
+    startVoiceRecognition();
+  };
+
+  const readTransactionDetails = () => {
+    Tts.speak(`Transaction ${props.count}, category ${props?.category?.name}, amount ${validAmount}, status success`);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.countContainer}>

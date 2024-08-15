@@ -25,16 +25,24 @@ export interface AuthRegisterPayload {
 
 export interface UserInfoReturnType extends Response {
   data: {
-    id: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    email: string;
-    role: string;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-    account: any;
-    profile: any;
+    account: {
+      account_number: string
+      balance: string
+      bank_branch: string
+      bank_name: string
+      createdAt: string
+      deletedAt: any
+      updatedAt: string
+    }
+    createdAt: string
+    email: string
+    first_name: string
+    id: string
+    last_name: string
+    phone: string
+    profile: any
+    role: string
+    status: string
+    updatedAt: string
   };
 }
