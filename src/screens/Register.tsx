@@ -2,7 +2,6 @@ import { AccessibilityInfo, SafeAreaView, StyleSheet } from 'react-native';
 import {
   LayoutView,
   View,
-  Text,
   HeaderText,
   TextInput,
   Button,
@@ -34,18 +33,12 @@ export default function RegisterScreen({
   const [register, registerStates] = useRegisterMutation();
   const [fieldIndex, setFieldIndex] = useState(0);
 
-  const fields = [
-    'first_name',
-    'last_name',
-    'phone',
-    'email',
-    'password',
-  ];
+  const fields = ['first_name', 'last_name', 'phone', 'email', 'password'];
   const {
     control,
     handleSubmit,
     formState: { errors, submitCount },
-    setValue
+    setValue,
   } = useForm<IRegisterForm>({
     mode: 'onBlur',
     resolver: yupResolver(registerValidationSchema),
@@ -58,7 +51,9 @@ export default function RegisterScreen({
     },
   });
   useEffect(() => {
-    Tts.speak('Welcome to the registration screen. Please enter your first name.');
+    Tts.speak(
+      'Welcome to the registration screen. Please enter your first name.',
+    );
     Voice.onSpeechResults = onSpeechResults;
     Voice.onSpeechEnd = onSpeechEnd;
     return () => {
@@ -66,17 +61,24 @@ export default function RegisterScreen({
     };
   }, []);
 
-  const onSpeechResults = (e:any) => {
+  const onSpeechResults = (e: any) => {
     const result = e.value[0];
-    
-    const currentField: "password" | "first_name" | "last_name" | "phone" | "email" = fields[fieldIndex] 
+
+    const currentField:
+      | 'password'
+      | 'first_name'
+      | 'last_name'
+      | 'phone'
+      | 'email' = fields[fieldIndex];
     setValue(currentField, result);
     if (fieldIndex < fields.length - 1) {
       setFieldIndex(fieldIndex + 1);
       const nextField = fields[fieldIndex + 1];
       Tts.speak(`Please enter your ${nextField.replace('_', ' ')}`);
     } else {
-      Tts.speak('All fields are filled. Please say "Register" to submit the form.');
+      Tts.speak(
+        'All fields are filled. Please say "Register" to submit the form.',
+      );
     }
   };
 
@@ -121,12 +123,14 @@ export default function RegisterScreen({
             message: e?.message,
             type: 'Success',
           });
+          Tts.speak('Registration successful');
           AccessibilityInfo.announceForAccessibility('Registration successful');
         } else {
           openToast({
             message: e.message,
             type: 'Failed',
           });
+
           AccessibilityInfo.announceForAccessibility(
             'Registration failed: ' + e.message,
           );
@@ -134,7 +138,7 @@ export default function RegisterScreen({
       })
       .catch((e) => {
         openToast({
-          message: e.data?.message ?? e.message,
+          message: e.data?.data?.message ?? 'An error occurred',
           type: 'Failed',
         });
         AccessibilityInfo.announceForAccessibility(
@@ -223,13 +227,13 @@ export default function RegisterScreen({
               accessibilityLabel='Register button'
               accessibilityHint='Tap to register'
             />
-             <Button
-              title="Use Voice Input"
+            <Button
+              title='Use Voice Input'
               onPress={handleVoiceInput}
               accessible={true}
-              accessibilityRole="button"
-              accessibilityLabel="Use Voice Input button"
-              accessibilityHint="Tap to start voice input"
+              accessibilityRole='button'
+              accessibilityLabel='Use Voice Input button'
+              accessibilityHint='Tap to start voice input'
             />
             <ButtonLink
               onPress={() => navigation.navigate('Login')}
@@ -239,7 +243,6 @@ export default function RegisterScreen({
               accessibilityLabel='Login link'
               accessibilityHint='Tap to go to the login screen'
             />
-             
           </View>
         </View>
       </SafeAreaView>
