@@ -29,7 +29,7 @@ export const expenseApi = createApi({
   endpoints: (build) => ({
     getExpenses: build.query<ExpensesResponse, undefined>({
       query: () => ({
-        url: '/',
+        url: '/user',
         method: 'GET',
       }),
     }),

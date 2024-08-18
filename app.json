@@ -33,6 +33,10 @@
       "eas": {
         "projectId": "16e9954e-9726-45af-8ab7-b0ea6ce2a686"
       }
-    }
+    },
+    "plugins": [
+      "@react-native-voice/voice",
+      "expo-secure-store"
+    ]
   }
 }

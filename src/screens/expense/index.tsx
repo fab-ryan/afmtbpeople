@@ -22,7 +22,10 @@ const ListViewIncome = (expense: ExpenseInterface & { count: number }) => {
 export default function ExpenseScreen({
   navigation,
 }: RootStackScreenProps<'Expense'>) {
-  const { data, error, isLoading } = useGetExpensesQuery(undefined);
+  const { data, error, isLoading } = useGetExpensesQuery(undefined,{
+    refetchOnMountOrArgChange: true,
+  });
+  
   return (
     <LayoutView backbtn={true}>
       <View style={styles.container}>

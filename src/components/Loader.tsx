@@ -1,6 +1,7 @@
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import { View } from './Themed';
 import Modal from './Modal';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import { useEffect, useState } from 'react';
 
@@ -29,7 +30,18 @@ function Loader({ loading }: LoaderProps) {
   );
 }
 
-export { Loader };
+const LoaderSpinner = ({ loading }: LoaderProps) => {
+  return (
+    <Spinner
+      visible={loading}
+      textContent={'Loading...'}
+      textStyle={{ color: '#fff' }}
+    />
+  );
+}
+export { Loader ,
+  LoaderSpinner
+};
 
 const styles = StyleSheet.create({
   container: {

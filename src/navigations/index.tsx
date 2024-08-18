@@ -18,19 +18,28 @@ import AddNewDeposit from '@screens/deposite/Create';
 import WithdrawScreen from '@screens/withdraw';
 import AddNewWithdraw from '@screens/withdraw/Create';
 import RegisterScreen from '@screens/Register';
+import LoadingScreen from '@screens/LoadingScreen';
 
 import ReportScreen from '@screens/Report';
 
-import { HomeIcon, Icon, ListIcon, ProfileIcon ,ClockIcon} from '@components';
-import { Dimensions } from 'react-native';
+import {
+  HomeIcon,
+  Icon,
+  ListIcon,
+  ProfileIcon,
+  ClockIcon,
+  LoaderSpinner,
+} from '@components';
+import { Dimensions, View } from 'react-native';
 import ProfileScreen from '@screens/Profile';
 import { useUserInfoQuery } from '@redux';
 import { useSelector } from '@hooks';
+import { useEffect, useState } from 'react';
 
 export default function Navigation({ firstTime }: { firstTime: boolean }) {
+  const [isFirstTime, setIsFirstTime] = useState(true);
   useUserInfoQuery(null);
-  const {isLogged,data} = useSelector((state) => state.userInfo);
-  console.log(isLogged);
+  const { isLogged } = useSelector((state) => state.authUser);
   const light = lightTheme;
   const DefaultThemes = {
     ...DefaultTheme,
@@ -45,12 +54,27 @@ export default function Navigation({ firstTime }: { firstTime: boolean }) {
     },
     dark: false,
   };
-  console.log(data);
- 
+
+  useEffect(() => {
+    if (isFirstTime) {
+      setTimeout(() => {
+        setIsFirstTime(false);
+      }, 2000);
+    }
+  }, [isLogged]);
+
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={DefaultThemes}>
-        <RootNavigator isLogin={isLogged} />
+        {isFirstTime ? (
+          <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          >
+            <LoaderSpinner loading={isFirstTime} />
+          </View>
+        ) : (
+          <RootNavigator isLogin={isLogged} />
+        )}
       </NavigationContainer>
     </SafeAreaProvider>
   );
@@ -58,12 +82,17 @@ export default function Navigation({ firstTime }: { firstTime: boolean }) {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator({ isLogin }: { isLogin: boolean }) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
   return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName={isLogin ? 'Root' : 'Login'}
-    >
-      {isLogin && (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {isLogin && !isLoading ? (
         <>
           <Stack.Screen
             name='Root'
@@ -106,10 +135,14 @@ function RootNavigator({ isLogin }: { isLogin: boolean }) {
             component={AddNewWithdraw}
           />
         </>
-      )}
-      {
-        !isLogin && (
-
+      ) : isLogin && isLoading ? (
+        <>
+          <Stack.Screen
+            name='LoadingScreen'
+            component={LoadingScreen}
+          />
+        </>
+      ) : (
         <>
           <Stack.Screen
             name='Login'
@@ -120,8 +153,13 @@ function RootNavigator({ isLogin }: { isLogin: boolean }) {
             component={RegisterScreen}
           />
         </>
-        )
-      } 
+      )}
+      {/* <>
+        <Stack.Screen
+          name='LoadingScreen'
+          component={LoadingScreen}
+        />
+      </> */}
     </Stack.Navigator>
   );
 }

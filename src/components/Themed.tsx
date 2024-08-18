@@ -12,7 +12,17 @@ import { FontAwesome } from '@expo/vector-icons';
 import layouts from '@assets/images/layouts.png';
 import { lightTheme } from '@constants/Colors';
 import React from 'react';
-import Svg, { Circle, Defs, G, Path, Rect, SvgXml, ClipPath } from 'react-native-svg';
+import Svg, {
+  Circle,
+  Defs,
+  G,
+  Path,
+  Rect,
+  SvgXml,
+  ClipPath,
+  Filter,
+  FeColorMatrix,
+} from 'react-native-svg';
 import { BackButton } from './Button';
 import { useNavigation } from '@react-navigation/native';
 
@@ -105,7 +115,17 @@ export const HomeIcon = ({ color }: { color: string }) => {
 };
 
 export const ProfileIcon = ({ color }: { color: string }) => {
-  return <ProfileIconSvg />;
+  return (
+    <FontAwesome
+      name='user-o'
+      color={color}
+      size={24}
+      style={{
+        fontWeight: '300',
+      }}
+      />
+
+    )
 };
 
 export const ListIcon = () => {};

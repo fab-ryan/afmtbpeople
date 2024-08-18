@@ -2,6 +2,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import {
   CompositeScreenProps,
   NavigatorScreenParams,
+  RouteProp,
 } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -18,7 +19,12 @@ export type RootStackParamList = {
   NewDeposit: undefined;
   Withdraw: undefined;
   NewWithdraw: undefined;
+  LoadingScreen: undefined;
 };
+
+
+export type RooteRouteProps<T extends keyof RootStackParamList> = RouteProp<RootStackParamList, T>
+
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
 

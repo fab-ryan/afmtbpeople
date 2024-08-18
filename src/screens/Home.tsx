@@ -1,4 +1,10 @@
-import { Button, HeaderText, LayoutView, View } from '@components';
+import {
+  Button,
+  HeaderText,
+  LayoutView,
+  View,
+  LoaderSpinner,
+} from '@components';
 import { lightTheme } from '@constants/Colors';
 import {
   SafeAreaView,
@@ -15,29 +21,31 @@ import Tts from 'react-native-tts';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const { data, error } = useGetStatisticsQuery(null);
+  const { data, error, isLoading } = useGetStatisticsQuery(null);
 
   const [voiceCommand, setVoiceCommand] = useState('');
+  console.log( data?.data);
 
   useEffect(() => {
-    Tts.speak('Welcome to the home screen.');
-    Voice.onSpeechResults = onSpeechResults;
-    Voice.onSpeechEnd = onSpeechEnd;
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
+    if (!isLoading) {
+      Tts.speak('Welcome to the home screen.');
+      Voice.onSpeechResults = onSpeechResults;
+      Voice.onSpeechEnd = onSpeechEnd;
+      return () => {
+        Voice.destroy().then(Voice.removeAllListeners);
+      };
+    }
+  }, [isLoading]);
 
-  const onSpeechResults = (e:any) => {
+  const onSpeechResults = (e: any) => {
     const result = e.value[0].toLowerCase();
     setVoiceCommand(result);
   };
 
-
   const onSpeechEnd = () => {
     if (voiceCommand.includes('navigate to')) {
       const navigateTo = voiceCommand.replace('navigate to ', '');
-      const item = dummyData.find(d => d.title.toLowerCase() === navigateTo);
+      const item = dummyData.find((d) => d.title.toLowerCase() === navigateTo);
       if (item) {
         Tts.speak(`Navigating to ${item.title}`);
         // Add your navigation logic here
@@ -57,44 +65,61 @@ export default function Home() {
 
   return (
     <LayoutView>
-      <View style={styles.container}>
-        <HeaderText
-          accessible={true}
-          accessibilityRole='header'
-          accessibilityValue={{
-            text: 'Welcome',
-            now: 1,
-          }}
-          accessibilityHint='Welcome'
-        >
-          Welcome{' '}
-        </HeaderText>
-        <View>
-          <View style={styles.content}>
-            <FlatList
-              data={dummyData}
-              keyExtractor={(item) => item.id.toString()}
-              style={styles.flatListContainer}
-              renderItem={({ item }) => (
-                <HomeCard
-                  title={item.title}
-                  counts={item.counts}
-                  navigateTo={item.navigateTo}
-                  icon={item.icon}
-                />
-              )}
-            />
+      {isLoading ? (
+        // <LoaderSpinner loading={isLoading} />
+        null
+      ) : (
+        <View style={styles.container}>
+          <HeaderText
+            accessible={true}
+            accessibilityRole='header'
+            accessibilityValue={{
+              text: 'Welcome',
+              now: 1,
+            }}
+            accessibilityHint='Welcome'
+          >
+            Welcome{' '}
+          </HeaderText>
+          <View>
+            <View style={styles.content}>
+              <FlatList
+                data={dummyData}
+                keyExtractor={(item) => item.id.toString()}
+                style={styles.flatListContainer}
+                showsVerticalScrollIndicator={false}
+                disableVirtualization={true}
+                accessibilityRole='list'
+                scrollEnabled={true}
+                accessibilityLabel='Home Screen'
+                accessibilityHint='Scroll to view options'
+                accessibilityValue={{
+                  text: 'Home Screen',
+                  now: 1,
+                }}
+                contentContainerStyle={{ paddingBottom: 20 }} 
+                accessibilityLiveRegion='polite'
+                renderItem={({ item,index }) => (
+                  <HomeCard
+                    title={item.title}
+                    counts={data?.data?.[item?.title]}
+                    navigateTo={item.navigateTo}
+                    icon={item.icon}
+                  />
+                )}
+              />
+            </View>
           </View>
+          <Button
+            title='Use Voice Command'
+            onPress={handleVoiceCommand}
+            accessible={true}
+            accessibilityRole='button'
+            accessibilityLabel='Use Voice Command button'
+            accessibilityHint='Tap to start voice input'
+          />
         </View>
-        <Button
-          title="Use Voice Command"
-          onPress={handleVoiceCommand}
-          accessible={true}
-          accessibilityRole="button"
-          accessibilityLabel="Use Voice Command button"
-          accessibilityHint="Tap to start voice input"
-        />
-      </View>
+       )} 
     </LayoutView>
   );
 }
@@ -113,8 +138,9 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   flatListContainer: {
+    flexGrow: 1,
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 220,
     gap: 20,
     height: '100%',
   },

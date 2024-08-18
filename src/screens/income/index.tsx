@@ -13,7 +13,6 @@ import { RootStackScreenProps } from '@utils/types';
 import {
   StyleSheet,
   ScrollView,
-  AccessibilityInfo,
   Pressable,
 } from 'react-native';
 import { useGetIncomesQuery } from '@redux';

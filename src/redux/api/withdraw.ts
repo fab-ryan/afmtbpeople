@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { DepositsResponse } from '@types';
 import { baseUrl, getToken } from '@utils';
 
-export const depositApi = createApi({
-  reducerPath: 'deposit',
+import { WithdrawPayload, WithdrawResponse } from '@types';
+
+export const withdrawApi = createApi({
+  reducerPath: 'withdraw',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${baseUrl}/api/deposits`,
+    baseUrl: `${baseUrl}/api/withdraws`,
     prepareHeaders: async (headers) => {
       try {
         const token = await new Promise((resolve, reject) => {
@@ -25,15 +26,15 @@ export const depositApi = createApi({
       }
     },
   }),
-  tagTypes: ['deposit'],
+  tagTypes: ['withdraw'],
   endpoints: (build) => ({
-    getDeposits: build.query<DepositsResponse, undefined>({
+    getWithdraws: build.query<WithdrawResponse, undefined>({
       query: () => ({
         url: '/',
         method: 'GET',
       }),
     }),
-    createDeposit: build.mutation({
+    createWithdraw: build.mutation<WithdrawResponse, WithdrawPayload>({
       query: (body) => ({
         url: '/',
         method: 'POST',
@@ -43,4 +44,4 @@ export const depositApi = createApi({
   }),
 });
 
-export const { useGetDepositsQuery, useCreateDepositMutation } = depositApi;
+export const { useGetWithdrawsQuery, useCreateWithdrawMutation } = withdrawApi;

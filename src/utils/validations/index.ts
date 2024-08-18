@@ -6,7 +6,7 @@ export const loginValidationSchema = yup.object().shape({
     // username can be email or phone number
     username: yup.string()
         .required('Username is required')
-        .matches(/^[a-zA-Z0-9]+$/, 'Username must be alphanumeric')
+        // .matches(/^[a-zA-Z0-9]+$/, 'Username must be alphanumeric')
         .min(2, ({ min }) => `Username must be at least ${min} characters`)
         .max(20, ({ max }) => `Username must be at most ${max} characters`),
 
@@ -37,4 +37,16 @@ export const expenseValidationSchema = yup.object().shape({
     amount: yup.string().required('Amount is Required'),
     description: yup.string().required('Description is Required'),
     category_id: yup.string().required('Category is Required'),
+})
+
+export const depositValidationSchema = yup.object().shape({
+    amount: yup.string().required('Amount is Required'),
+    description: yup.string().required('Description is Required'),
+    source: yup.string().required('Source is Required'),
+
+})
+
+export const withdrawalValidationSchema = yup.object().shape({
+    amount: yup.string().required('Amount is Required'),
+
 })
