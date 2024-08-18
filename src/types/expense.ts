@@ -27,3 +27,9 @@ export interface ExpensePayload {
   category_id: string;
   comment?: string;
 }
+
+export interface ExpensePayload {
+  amount: string;
+  category_id: string;
+  comment?: string;
+}

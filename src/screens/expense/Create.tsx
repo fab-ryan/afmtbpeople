@@ -9,7 +9,7 @@ import {
 } from '@components';
 
 import { lightTheme } from '@constants/Colors';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import {  StyleSheet } from 'react-native';
 
 import { expenseValidationSchema } from '@utils';
 import { useForm } from 'react-hook-form';
@@ -80,6 +80,7 @@ export default function AddNewExpense({
         }
       })
       .catch((err) => {
+        console.log(err);
         if (err.status === 400) {
           console.log(err.data);
         }

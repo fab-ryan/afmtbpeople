@@ -21,6 +21,7 @@ import {
   incomeApi,
   expenseApi,
   statisticsApi,
+  depositApi
 } from './api';
 
 export type ThunkActionType<T = Promise<void>> = ThunkAction<
@@ -45,7 +46,9 @@ export const store = configureStore({
       .concat(categoryApi.middleware)
       .concat(incomeApi.middleware)
       .concat(expenseApi.middleware)
-      .concat(statisticsApi.middleware),
+      .concat(statisticsApi.middleware)
+      .concat(depositApi.middleware)
+      ,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

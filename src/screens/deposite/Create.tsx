@@ -11,17 +11,20 @@ import {
 import { lightTheme } from '@constants/Colors';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
-import { expenseValidationSchema } from '@utils';
+import { depositValidationSchema } from '@utils';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { RootStackScreenProps } from '@utils/types';
-import { useGetCategoriesQuery } from '@redux';
+import { useCreateDepositMutation } from '@redux';
 import { useEffect, useState } from 'react';
+import { useActions } from '@hooks';
+import Voice from '@react-native-voice/voice';
+import Tts from 'react-native-tts';
 
-type INewExpense = {
+type InewDeposite = {
   amount: string;
   description: string;
-  category_id: string;
+  source: string;
 };
 
 interface ICategory {
@@ -31,38 +34,93 @@ interface ICategory {
 export default function AddNewExpense({
   navigation,
 }: RootStackScreenProps<'NewDeposit'>) {
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const { data, error, isLoading } = useGetCategoriesQuery(undefined);
+  const [createDeposit, { data, error, isLoading }] =
+    useCreateDepositMutation();
 
-  useEffect(() => {
-    if (data) {
-      setCategories(
-        data?.data?.map((category) => ({
-          label: category.name,
-          value: category.id,
-        })),
-      );
-    }
-  }, [data]);
+  const { openToast } = useActions();
 
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<INewExpense>({
+  } = useForm<InewDeposite>({
     mode: 'onBlur',
-    resolver: yupResolver(expenseValidationSchema),
+    resolver: yupResolver(depositValidationSchema),
     defaultValues: {
       amount: '',
       description: '',
-      category_id: '',
-      title: '',
+      source: '',
     },
   });
-  const onSubmit = (data: INewExpense) => {
-    // navigation.navigate('Deposit');
-    console.log(data);
+
+  useEffect(() => {
+    Voice.onSpeechResults = onSpeechResults;
+    Voice.onSpeechEnd = onSpeechEnd;
+    readFormLabels();
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+
+  const onSpeechResults = (e: any) => {
+    const result = e.value[0].toLowerCase();
+    if (result.startsWith('amount')) {
+      const amount = result.split('amount')[1].trim();
+      setValue('amount', amount);
+      Tts.speak(`Amount set to ${amount}`);
+    } else if (result.startsWith('description')) {
+      const description = result.split('description')[1].trim();
+      setValue('description', description);
+      Tts.speak(`Description set to ${description}`);
+    } else if (result.startsWith('source')) {
+      const source = result.split('source')[1].trim();
+      setValue('source', source);
+      Tts.speak(`Source set to ${source}`);
+    }
+  };
+
+  const readFormLabels = () => {
+    Tts.speak('New Deposit. Please enter source, amount, and description');
+  };
+
+  const onSpeechEnd = async () => {
+    try {
+      Tts.speak(
+        'All fields are filled. Please say "Submit" to create the deposit.',
+      );
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onSubmit = (data: InewDeposite) => {
+    if (isLoading) return;
+    createDeposit({
+      amount: parseFloat(data.amount),
+      description: data.description,
+      source: data.source,
+    })
+      .unwrap()
+      .then((res) => {
+        if (res.status) {
+          openToast({
+            message: res?.message,
+            type: 'Success',
+          });
+          navigation.navigate('Deposit');
+          Tts.speak('Deposit created successfully');
+        } else {
+          openToast({
+            message: res?.message,
+            type: 'Failed',
+          });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   return (
@@ -79,25 +137,13 @@ export default function AddNewExpense({
 
         <View>
           <View style={styles.content}>
-            {/* <TextInput
-              label='Title'
-              placeholder='Enter title'
+            <TextInput
+              label='Source'
+              placeholder='Enter source'
               control={control}
-              name='title'
-              error={errors.title?.message}
-            /> */}
-            <View>
-              <Select
-                label='Category'
-                options={categories}
-                onSelect={(option) => setValue('category_id', option?.value as string)}
-              />
-              {errors.category_id && (
-                <Text style={{ color: 'red' }}>
-                  {errors.category_id.message}
-                </Text>
-              )}
-            </View>
+              name='source'
+              error={errors.source?.message}
+            />
             <TextInput
               label='Amount'
               placeholder='Enter amount'
@@ -120,6 +166,11 @@ export default function AddNewExpense({
             <Button
               title='Submit'
               onPress={handleSubmit(onSubmit)}
+              disabled={isLoading}
+              accessible={true}
+              accessibilityLabel='Submit button'
+              accessibilityRole='button'
+              accessibilityHint='Tap to submit the deposit'
             />
           </View>
         </View>

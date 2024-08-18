@@ -7,6 +7,7 @@ type InitialStateType = {
   token: {
     access_token: string | undefined | null;
   };
+  isLogged: boolean;
 };
 
 type UserInfoReturnTypes = {
@@ -27,6 +28,7 @@ const initialState: InitialStateType = {
   token: {
     access_token: undefined,
   },
+  isLogged: false,
 };
 
 export const setAuthUser = createAsyncThunk(
@@ -61,6 +63,7 @@ const authUser = createSlice({
   reducers: {
     removeAuthUser: (state) => {
       state.token = initialState.token;
+      state.isLogged = false;
       async () => {
         await removeToken();
       };
@@ -70,6 +73,21 @@ const authUser = createSlice({
   extraReducers: (build) => {
     build.addCase(setAuthUser.fulfilled, (state, action) => {
       state.token.access_token = action.payload as string | undefined | null;
+      state.isLogged = true;
+    });
+    build.addCase(setAuthUser.rejected, (state) => {
+      state.token.access_token = null;
+      state.isLogged = false;
+    });
+
+    build.addMatcher(authApi.endpoints.userInfo.matchPending, (state) => {
+      state.isLogged = false;
+    });
+    build.addMatcher(authApi.endpoints.userInfo.matchFulfilled, (state) => {
+      state.isLogged = true;
+    });
+    build.addMatcher(authApi.endpoints.userInfo.matchRejected, (state) => {
+      state.isLogged = false;
     });
   },
 });

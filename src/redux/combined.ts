@@ -6,6 +6,7 @@ import {
   incomeApi,
   expenseApi,
   statisticsApi,
+  depositApi,
 } from './api';
 import toastReducer from './slice/toast';
 import modalReducer from './slice/modal';
@@ -19,6 +20,7 @@ export const combinedStore = combineReducers({
   [incomeApi.reducerPath]: incomeApi.reducer,
   [expenseApi.reducerPath]: expenseApi.reducer,
   [statisticsApi.reducerPath]: statisticsApi.reducer,
+  [depositApi.reducerPath]: depositApi.reducer,
 
   toast: toastReducer,
   modal: modalReducer,

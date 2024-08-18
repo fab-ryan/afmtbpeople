@@ -1,4 +1,4 @@
-import { Button, HeaderText, LayoutView, View ,Loader} from '@components';
+import { Button, HeaderText, LayoutView, View, Loader } from '@components';
 import { lightTheme } from '@constants/Colors';
 import { SafeAreaView, Text, StyleSheet, FlatList } from 'react-native';
 import { StackScreenProps } from '@utils/types';
@@ -9,14 +9,75 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { useUserInfoQuery } from '@redux';
 import { useEffect } from 'react';
 import { useSelector } from '@hooks';
-
+import Voice from '@react-native-voice/voice'; // Import Voice for speech recognition
+import Tts from 'react-native-tts';
 
 export default function Profile(): JSX.Element {
   const { removeAuthUser } = useActions();
-  const { data, isLoading, isError,  } = useUserInfoQuery(null);
-  const {isLogged} = useSelector((state) => state.userInfo);
-    const navigation = useNavigation<StackScreenProps>();
+  const { data, isLoading, isError } = useUserInfoQuery(null);
+  const { isLogged } = useSelector((state) => state.userInfo);
+  const navigation = useNavigation<StackScreenProps>();
 
+  useEffect(() => {
+    Voice.onSpeechStart = onSpeechStart;
+    Voice.onSpeechEnd = onSpeechEnd;
+    Voice.onSpeechResults = onSpeechResults;
+
+    speakProfileDetails();
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+
+  const onSpeechStart = () => {
+    console.log('Speech has started');
+  };
+
+  const onSpeechEnd = () => {
+    console.log('Speech has ended');
+  };
+
+  const onSpeechResults = (result:any) => {};
+
+  const startListening = async () => {
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error('Error starting voice recognition:', e);
+    }
+  };
+
+  const stopListening = async () => {
+    try {
+      await Voice.stop();
+    } catch (e) {
+      console.error('Error stopping voice recognition:', e);
+    }
+  };
+
+  const speak = (text:string) => {
+    Tts.speak(text);
+  };
+
+
+  const speakProfileDetails = () => {
+    const { first_name, last_name, email, phone, account, status } = data?.data || {};
+
+    const profileDetails = [
+      `Name: ${first_name} ${last_name}`,
+      `Email: ${email}`,
+      `Phone: ${phone}`,
+      `Account Type: Personal`,
+      `Account Number: ${account?.account_number}`,
+      `Balance: ${amountFormat(account?.balance)}`,
+      `Currency: RWF`,
+      `Status: ${status}`,
+      `Date Created: ${formatDate(account?.createdAt)}`,
+    ];
+
+    profileDetails.forEach(detail => speak(detail));
+  };
 
   const amountFormat = (amount: string | undefined) => {
     return Intl.NumberFormat('en-US', {
@@ -39,19 +100,35 @@ export default function Profile(): JSX.Element {
   }, [isError]);
   const handleLogout = async () => {
     await removeToken();
+    removeAuthUser();
     navigation.navigate('Login');
   };
   return (
     <LayoutView>
-    {isLogged &&  <Loader loading={isLogged}/> }
       <View style={styles.container}>
-        <HeaderText style={{ textAlign: 'center' }}>
+        <HeaderText
+          style={{ textAlign: 'center' }}
+          accessible={true}
+          accessibilityRole='header'
+          accessibilityLabel='Profile Information Header'
+        >
           Profile Information
         </HeaderText>
         <View style={styles.content}>
           <View style={styles.avatarInfoContainer}>
-            <View style={styles.avatarContainer}>
-              <Text style={styles.avatarImage}>
+            <View
+              style={styles.avatarContainer}
+              accessible={true}
+              accessibilityRole='image'
+              accessibilityLabel='User Avatar'
+            >
+              <Text
+                style={styles.avatarImage}
+                accessible={true}
+                accessibilityLabel={`User Initial ${getFirstLetter(
+                  data?.data?.last_name as string,
+                )}`}
+              >
                 {getFirstLetter(data?.data?.last_name as string)}
               </Text>
             </View>
@@ -64,22 +141,33 @@ export default function Profile(): JSX.Element {
                     ' ' +
                     data?.data?.last_name) as string
                 }
+                accessible={true}
+                accessibilityLabel='User Name'
               />
               <View style={{ marginTop: 10 }} />
               <UserInfoItem
                 title='Email'
                 value={data?.data?.email as string}
+                accessible={true}
+                accessibilityLabel='User Email'
               />
               <View style={{ marginTop: 10 }} />
               <UserInfoItem
                 title='Phone'
                 value={data?.data?.phone as string}
+                accessible={true}
+                accessibilityLabel='User Phone Number'
               />
               <View style={{ marginTop: 10 }} />
             </View>
           </View>
           <View style={{ marginTop: 20 }} />
-          <HeaderText style={{ textAlign: 'center' }}>
+          <HeaderText
+            style={{ textAlign: 'center' }}
+            accessibilityRole='header'
+            accessibilityLabel='Account Information Header'
+            accessible={false}
+          >
             Account Information
           </HeaderText>
           <View
@@ -97,27 +185,62 @@ export default function Profile(): JSX.Element {
           <UserInfoItem
             title='Account Number'
             value={data?.data?.account?.account_number as string}
+            accessible={true}
+            accessibilityLabel={`Account Number: ${
+              data?.data?.account?.account_number as string
+            }`}
           />
           <UserInfoItem
             title='Balance'
             value={amountFormat(data?.data?.account?.balance) as string}
+            accessible={true}
+            accessibilityLabel={`Account Balance: ${amountFormat(
+              data?.data?.account?.balance,
+            )}`}
           />
           <UserInfoItem
             title='Currency'
             value='RWF'
+            accessible={true}
+            accessibilityLabel='Currency: RWF'
           />
           <UserInfoItem
             title='Status'
             value={data?.data?.status as string}
+            accessible={true}
+            accessibilityLabel={`Account Status: ${
+              data?.data?.status as string
+            }`}
           />
           <UserInfoItem
             title='Date Created'
             value={formatDate(data?.data?.account?.createdAt) as string}
+            accessible={true}
+            accessibilityLabel={`Account Creation Date: ${formatDate(
+              data?.data?.account?.createdAt,
+            )}`}
           />
           <View style={{ marginTop: 20 }} />
           <Button
             title='Logout'
             onPress={handleLogout}
+            accessible={true}
+            accessibilityRole='button'
+            accessibilityLabel='Logout Button'
+          />
+          <Button
+            title='Stop Listening'
+            onPress={stopListening}
+            accessible={true}
+            accessibilityRole='button'
+            accessibilityLabel='Stop Voice Recognition'
+          />
+          <Button
+            title='Speak'
+            onPress={() => speak('This is your profile information.')}
+            accessible={true}
+            accessibilityRole='button'
+            accessibilityLabel='Text to Speech Button'
           />
         </View>
       </View>
@@ -153,8 +276,22 @@ const CardMenu = () => {
   );
 };
 
-const UserInfoItem = ({ title, value }: { title: string; value: string }) => (
-  <View style={styles.infoContainer}>
+const UserInfoItem = ({
+  title,
+  value,
+  accessible,
+  accessibilityLabel,
+}: {
+  title: string;
+  value: string;
+  accessible?: boolean;
+  accessibilityLabel?: string;
+}) => (
+  <View
+    style={styles.infoContainer}
+    accessible={accessible}
+    accessibilityLabel={accessibilityLabel}
+  >
     <Text
       style={{
         color: lightTheme.text,
