@@ -360,8 +360,7 @@ export const s = (props: any) => {
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
-  }
-  , []);
+  }, []);
 
   const startVoiceRecognition = async () => {
     try {
@@ -384,18 +383,15 @@ export const s = (props: any) => {
   };
 
   const readExpenseDetails = () => {
-    Tts.speak(`Expense ${props.count}, category ${props.category.name}, amount ${validAmount}, status success`);
+    Tts.speak(
+      `Expense ${props.count}, category ${props.category.name}, amount ${validAmount}, status success`,
+    );
   };
-
 
   return (
     <View style={styles.container}>
-      <View style={styles.countContainer}
-
-      >
-        <Text style={styles.countText}
-
-        >{props.count}</Text>
+      <View style={styles.countContainer}>
+        <Text style={styles.countText}>{props.count}</Text>
       </View>
       <View style={styles.columnContainer}>
         <Text style={styles.columnText}>Category</Text>
@@ -456,7 +452,9 @@ export const TransactionListView = (props: any) => {
   };
 
   const readTransactionDetails = () => {
-    Tts.speak(`Transaction ${props.count}, category ${props?.category?.name}, amount ${validAmount}, status success`);
+    Tts.speak(
+      `Transaction ${props.count}, category ${props?.category?.name}, amount ${validAmount}, status success`,
+    );
   };
 
   return (
@@ -472,7 +470,7 @@ export const TransactionListView = (props: any) => {
         <Text style={styles.columnText}>Amount</Text>
         <Text style={styles.columnLabel}>9000</Text>
       </View>
-      
+
       <View style={styles.statusContainer}>
         <Text style={styles.statusText}>Success</Text>
       </View> 
