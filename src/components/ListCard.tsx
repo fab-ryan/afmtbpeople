@@ -206,7 +206,7 @@ export const DepositListView = (props: any) => {
     </View>
   );
 };
-export const ExpenseListView = (props: any) => {
+export const ExpenseListViews = (props: any) => {
   const validAmount = Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'FWR',
@@ -275,7 +275,7 @@ export const ExpenseListView = (props: any) => {
   );
 };
 
-export const TransactionListView = (props: any) => {
+export const TransactionListViews = (props: any) => {
   const validAmount = Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'FWR',
@@ -336,14 +336,13 @@ export const TransactionListView = (props: any) => {
       </View>
 
       <View style={styles.statusContainer}>
-<<<<<<< HEAD
         <Text style={styles.statusText}>Success</Text>
       </View> 
     </View>
   );
 };
 
-export const ExpenseListView = (props: any) => {
+export const s = (props: any) => {
   const validAmount = Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'FWR',
@@ -476,18 +475,6 @@ export const TransactionListView = (props: any) => {
       
       <View style={styles.statusContainer}>
         <Text style={styles.statusText}>Success</Text>
-=======
-        <Text
-          style={
-            (styles.statusText,
-            {
-              color: props?.status === 'success' ? '#4A97CE' : '#FF0000',
-            })
-          }
-        >
-          Success
-        </Text>
->>>>>>> 1ec4771 (fixing withdraw)
       </View>
     </View>
   );
