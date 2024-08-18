@@ -206,7 +206,7 @@ export const DepositListView = (props: any) => {
     </View>
   );
 };
-export const ExpenseListViews = (props: any) => {
+export const ExpenseListView = (props: any) => {
   const validAmount = Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'FWR',
