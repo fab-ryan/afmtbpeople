@@ -63,14 +63,19 @@ export default function RegisterScreen({
 
   const onSpeechResults = (e: any) => {
     const result = e.value[0];
-
     const currentField:
-      | 'password'
-      | 'first_name'
-      | 'last_name'
-      | 'phone'
-      | 'email' = fields[fieldIndex];
+    | 'first_name'
+    | 'last_name'
+    | 'phone'
+    | 'email' 
+    | 'password'
+    = fields[fieldIndex];
+
     setValue(currentField, result);
+    Tts.speak(`You said ${result}`);
+
+
+
     if (fieldIndex < fields.length - 1) {
       setFieldIndex(fieldIndex + 1);
       const nextField = fields[fieldIndex + 1];
@@ -130,7 +135,7 @@ export default function RegisterScreen({
             message: e.message,
             type: 'Failed',
           });
-
+          Tts.speak('Registration failed');
           AccessibilityInfo.announceForAccessibility(
             'Registration failed: ' + e.message,
           );
@@ -141,6 +146,7 @@ export default function RegisterScreen({
           message: e.data?.data?.message ?? 'An error occurred',
           type: 'Failed',
         });
+        Tts.speak('Registration failed');
         AccessibilityInfo.announceForAccessibility(
           'Registration failed: ' + e.message,
         );
