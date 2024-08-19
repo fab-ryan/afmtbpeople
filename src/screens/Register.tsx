@@ -142,6 +142,7 @@ export default function RegisterScreen({
         }
       })
       .catch((e) => {
+        console.log(e.data, data);
         openToast({
           message: e.data?.data?.message ?? 'An error occurred',
           type: 'Failed',
