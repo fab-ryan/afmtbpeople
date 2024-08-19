@@ -275,7 +275,7 @@ export const ExpenseListView = (props: any) => {
   );
 };
 
-export const TransactionListViews = (props: any) => {
+export const TransactionListView = (props: any) => {
   const validAmount = Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'FWR',
@@ -342,76 +342,8 @@ export const TransactionListViews = (props: any) => {
   );
 };
 
-export const s = (props: any) => {
-  const validAmount = Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'FWR',
-  }).format(props?.amount);
 
-  useEffect(() => { 
-    // Initialize voice recognition
-    Voice.onSpeechResults = onSpeechResults;
-    Voice.onSpeechEnd = onSpeechEnd;
-    // startVoiceRecognition();
-
-    // Read expense details when component mounts
-    readExpenseDetails();
-
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
-
-  const startVoiceRecognition = async () => {
-    try {
-      await Voice.start('en-US');
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const onSpeechResults = (e: any) => {
-    const result = e.value[0].toLowerCase();
-    if (result.includes('read expense')) {
-      readExpenseDetails();
-    }
-  };
-
-  const onSpeechEnd = () => {
-    // Optionally, you can restart voice recognition here if needed
-    startVoiceRecognition();
-  };
-
-  const readExpenseDetails = () => {
-    Tts.speak(
-      `Expense ${props.count}, category ${props.category.name}, amount ${validAmount}, status success`,
-    );
-  };
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.countContainer}>
-        <Text style={styles.countText}>{props.count}</Text>
-      </View>
-      <View style={styles.columnContainer}>
-        <Text style={styles.columnText}>Category</Text>
-        <Text style={styles.columnLabel}>{props?.category?.name}</Text>
-      </View>
-      <View style={styles.columnContainer}>
-        <Text style={styles.columnText}>Amount</Text>
-        <Text style={styles.columnLabel}>{validAmount}</Text>
-      </View>
-      <View style={styles.columnContainer}>
-        <Text style={styles.columnText}></Text>
-        <View style={styles.statusContainer}>
-          <Text style={styles.statusText}>Success</Text>
-        </View>
-      </View>
-    </View>
-  );
-};
-
-export const TransactionListView = (props: any) => {
+export const TransactionListViews = (props: any) => {
   const validAmount = Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'FWR',
@@ -551,70 +483,70 @@ export const s = (props: any) => {
   );
 };
 
-export const TransactionListView = (props: any) => {
-  const validAmount = Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'FWR',
-  }).format(props?.amount);
+// export const TransactionListView = (props: any) => {
+//   const validAmount = Intl.NumberFormat('en-US', {
+//     style: 'currency',
+//     currency: 'FWR',
+//   }).format(props?.amount);
 
-  useEffect(() => {
-    // Initialize voice recognition
-    Voice.onSpeechResults = onSpeechResults;
-    Voice.onSpeechEnd = onSpeechEnd;
-    // startVoiceRecognition();
+//   useEffect(() => {
+//     // Initialize voice recognition
+//     Voice.onSpeechResults = onSpeechResults;
+//     Voice.onSpeechEnd = onSpeechEnd;
+//     // startVoiceRecognition();
 
-    // Read transaction details when component mounts
-    readTransactionDetails();
+//     // Read transaction details when component mounts
+//     readTransactionDetails();
 
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
+//     return () => {
+//       Voice.destroy().then(Voice.removeAllListeners);
+//     };
+//   }, []);
 
-  const startVoiceRecognition = async () => {
-    try {
-      await Voice.start('en-US');
-    } catch (e) {
-      console.error(e);
-    }
-  };
+//   const startVoiceRecognition = async () => {
+//     try {
+//       await Voice.start('en-US');
+//     } catch (e) {
+//       console.error(e);
+//     }
+//   };
 
-  const onSpeechResults = (e: any) => {
-    const result = e.value[0].toLowerCase();
-    if (result.includes('read transaction')) {
-      readTransactionDetails();
-    }
-  };
+//   const onSpeechResults = (e: any) => {
+//     const result = e.value[0].toLowerCase();
+//     if (result.includes('read transaction')) {
+//       readTransactionDetails();
+//     }
+//   };
 
-  const onSpeechEnd = () => {
-    // Optionally, you can restart voice recognition here if needed
-    startVoiceRecognition();
-  };
+//   const onSpeechEnd = () => {
+//     // Optionally, you can restart voice recognition here if needed
+//     startVoiceRecognition();
+//   };
 
-  const readTransactionDetails = () => {
-    Tts.speak(`Transaction ${props.count}, category ${props?.category?.name}, amount ${validAmount}, status success`);
-  };
+//   const readTransactionDetails = () => {
+//     Tts.speak(`Transaction ${props.count}, category ${props?.category?.name}, amount ${validAmount}, status success`);
+//   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.countContainer}>
-        <Text style={styles.countText}>2</Text>
-      </View>
-      <View style={styles.columnContainer}>
-        <Text style={styles.columnText}>Category</Text>
-        <Text style={styles.columnLabel}>Cateegory </Text>
-      </View>
-      <View style={styles.columnContainer}>
-        <Text style={styles.columnText}>Amount</Text>
-        <Text style={styles.columnLabel}>9000</Text>
-      </View>
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.countContainer}>
+//         <Text style={styles.countText}>2</Text>
+//       </View>
+//       <View style={styles.columnContainer}>
+//         <Text style={styles.columnText}>Category</Text>
+//         <Text style={styles.columnLabel}>Cateegory </Text>
+//       </View>
+//       <View style={styles.columnContainer}>
+//         <Text style={styles.columnText}>Amount</Text>
+//         <Text style={styles.columnLabel}>9000</Text>
+//       </View>
       
-      <View style={styles.statusContainer}>
-        <Text style={styles.statusText}>Success</Text>
-      </View>
-    </View>
-  );
-};
+//       <View style={styles.statusContainer}>
+//         <Text style={styles.statusText}>Success</Text>
+//       </View>
+//     </View>
+//   );
+// };
 
 const styles = StyleSheet.create({
   container: {
