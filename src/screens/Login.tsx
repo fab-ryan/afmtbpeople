@@ -82,8 +82,42 @@ export default function LoginScreen() {
 
   const onSpeechEnd = () => {
     if (username && password) {
-      // handleLogin();
-      console.log(username);
+      Tts.speak('Please say "Login" to proceed.');
+      const payload = {
+        username: username,
+        password: password,
+      };
+      login(payload)
+        .unwrap()
+        .then((e) => {
+          if (e.status) {
+            setAuthUser(e);
+            openToast({
+              message: e.message,
+              type: 'Success',
+            });
+            AccessibilityInfo.announceForAccessibility('Login successful');
+            Tts.speak('Login successful');
+          } else {
+            openToast({
+              message: e.message,
+              type: 'Failed',
+            });
+            AccessibilityInfo.announceForAccessibility(
+              'Login failed: ' + e.message,
+            );
+          }
+        })
+        .catch((e) => {
+          Tts.speak('Login failed wrong credentials');
+          openToast({
+            message: e.data?.message ?? e.message,
+            type: 'Failed',
+          });
+          AccessibilityInfo.announceForAccessibility(
+            'Login failed: ' + e.message,
+          );
+        });
     }
   };
 
@@ -135,7 +169,6 @@ export default function LoginScreen() {
   return (
     <LayoutView backbtn={false}>
       <SafeAreaView accessible={true}>
-       
         <View
           style={styles.container}
           accessible={true}
